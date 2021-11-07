@@ -7,3 +7,5 @@ app:
     repositories:
       - http://models.interlis.ch
       - http://models.geo.admin.ch
+    peerRepositories:
+      - https://geo.so.ch/models

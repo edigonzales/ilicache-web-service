@@ -18,8 +18,8 @@ repositories {
 dependencies {
     implementation 'org.springframework.boot:spring-boot-starter-web'
     implementation 'org.springframework.boot:spring-boot-starter-actuator'
-    implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
-    runtimeOnly('com.h2database:h2')
+    //implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
+    //runtimeOnly('com.h2database:h2')
     
     implementation 'ch.interlis:iox-ili:1.21.7' 
     implementation 'ch.interlis:ili2c-core:5.2.3'
