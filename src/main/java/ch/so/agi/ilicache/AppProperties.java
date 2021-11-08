@@ -9,16 +9,16 @@ import org.springframework.stereotype.Component;
 @Component
 @ConfigurationProperties("app")
 public class AppProperties {
-    private List<String> repositories = new ArrayList<String>();
+    private List<String> cloneRepositories = new ArrayList<String>();
     
     private List<String> peerRepositories = new ArrayList<String>();
 
-    public List<String> getRepositories() {
-        return repositories;
+    public List<String> getCloneRepositories() {
+        return cloneRepositories;
     }
 
-    public void setRepositories(List<String> repositories) {
-        this.repositories = repositories;
+    public void setCloneRepositories(List<String> cloneRepositories) {
+        this.cloneRepositories = cloneRepositories;
     }
 
     public List<String> getPeerRepositories() {

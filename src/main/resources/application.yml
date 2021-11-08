@@ -4,8 +4,9 @@
 app:
     myVar: ${VAR:defaultValue}
     cloneDirectory: ${CLONE_DIRECTORY}
-    repositories:
+    cloneFrequency: 0 * * * *
+    cloneRepositories:
       - http://models.interlis.ch
-      - http://models.geo.admin.ch
+      #- http://models.geo.admin.ch
     peerRepositories:
       - https://geo.so.ch/models

@@ -37,6 +37,9 @@ public class MainController {
 
     @Autowired
     AppProperties appProperties;
+    
+    @Autowired
+    CloneService cloneService;
 
     @GetMapping("/ping")
     public ResponseEntity<String> ping()  {
@@ -75,7 +78,7 @@ public class MainController {
         iomRootObj.setattrvalue("technicalContact", "_mailto:agi@bd.so.ch_");        
         iomRootObj.setattrvalue("furtherInformation", "_furtherInformation_");        
         
-        List<String> repositories = appProperties.getRepositories();
+        List<String> repositories = appProperties.getCloneRepositories();
         for (String repository : repositories) {
             Iom_jObject cacheSite = new Iom_jObject("IliSite09.RepositoryLocation_", null);
             String repositoryName = repository.substring(repository.indexOf("/")+2);
