@@ -21,7 +21,7 @@ apply plugin: 'org.apache.cayenne'
 
 group = 'ch.so.agi'
 
-sourceCompatibility = '17'
+sourceCompatibility = '11'
 
 repositories {
 	maven { url 'https://repo.spring.io/milestone' }
@@ -54,3 +54,26 @@ bootBuildImage {
 	builder = 'paketobuildpacks/builder:tiny'
 	//environment = ['BP_NATIVE_IMAGE': 'true']
 }
+
+cayenne.defaultDataMap 'datamap.map.xml'
+
+cdbimport {
+    map 'datamap.map.xml'
+    
+    cayenneProject 'cayenne-project.xml'
+    
+    dataSource {
+        driver 'org.h2.Driver'
+        url 'jdbc:h2:/Users/stefan/sources/ilicache-web-service/src/main/interlis/ilicache.mv.db'
+        username ''
+        password ''
+    }
+    
+    dbImport {
+        usePrimitives false
+        defaultPackage 'org.apache.cayenne.test'
+        
+        tableTypes 'TABLE', 'VIEW'
+    }
+}
+
