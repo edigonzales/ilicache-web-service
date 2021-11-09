@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<data-map xmlns="http://cayenne.apache.org/schema/10/modelMap"
+	 xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	 xsi:schemaLocation="http://cayenne.apache.org/schema/10/modelMap https://cayenne.apache.org/schema/10/modelMap.xsd"
+	 project-version="10">
+	<property name="defaultPackage" value="com.example.package"/>
+	<property name="defaultSchema" value="PUBLIC"/>
+	<db-entity name="CLONEREPOSITORY" schema="PUBLIC" catalog="ILICACHE">
+		<db-attribute name="ANAME" type="VARCHAR" isMandatory="true" length="255"/>
+		<db-attribute name="LASTRUN" type="TIMESTAMP" length="26"/>
+		<db-attribute name="LASTSUCCESSFULRUN" type="TIMESTAMP" length="26"/>
+		<db-attribute name="T_ID" type="BIGINT" isPrimaryKey="true" isMandatory="true" length="19"/>
+		<db-attribute name="URL" type="VARCHAR" isMandatory="true" length="1023"/>
+	</db-entity>
+	<obj-entity name="Clonerepository" className="com.example.package.Clonerepository" dbEntityName="CLONEREPOSITORY">
+		<obj-attribute name="aname" type="java.lang.String" db-attribute-path="ANAME"/>
+		<obj-attribute name="lastrun" type="java.time.LocalDateTime" db-attribute-path="LASTRUN"/>
+		<obj-attribute name="lastsuccessfulrun" type="java.time.LocalDateTime" db-attribute-path="LASTSUCCESSFULRUN"/>
+		<obj-attribute name="url" type="java.lang.String" db-attribute-path="URL"/>
+	</obj-entity>
+</data-map>
