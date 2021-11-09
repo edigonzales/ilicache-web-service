@@ -1,9 +1,23 @@
+buildscript {
+    // add Maven Central repository
+    repositories {
+        mavenCentral()
+    }
+    // add Cayenne Gradle Plugin
+    dependencies {
+        classpath group: 'org.apache.cayenne.plugins', name: 'cayenne-gradle-plugin', version: '4.1'
+    }
+}
+
 plugins {
 	id 'org.springframework.boot' version '2.6.0-RC1'
 	id 'io.spring.dependency-management' version '1.0.11.RELEASE'
 	id 'java'
 	//id 'org.springframework.experimental.aot' version '0.11.0-M2'
 }
+
+apply from: "$rootDir/gradle/versioning.gradle"
+apply plugin: 'org.apache.cayenne'
 
 group = 'ch.so.agi'
 
@@ -25,6 +39,8 @@ dependencies {
     implementation 'ch.interlis:ili2c-core:5.2.3'
     implementation 'ch.interlis:ili2c-tool:5.2.3'
 
+    implementation 'org.apache.cayenne:cayenne-server:4.1'
+    implementation 'com.h2database:h2:1.4.197'
 
 	developmentOnly 'org.springframework.boot:spring-boot-devtools'
 	testImplementation 'org.springframework.boot:spring-boot-starter-test'

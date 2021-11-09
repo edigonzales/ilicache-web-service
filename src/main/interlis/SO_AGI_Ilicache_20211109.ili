@@ -1,0 +1,35 @@
+INTERLIS 2.3;
+
+/** !!------------------------------------------------------------------------------
+ *  !! Version    | wer | Änderung
+ *  !!------------------------------------------------------------------------------
+ *  !! 2021-11-09 | sz  | Ersterfassung
+ *  !!==============================================================================
+ */
+!!@ technicalContact="mailto:agi@bd.so.ch"
+MODEL SO_AGI_Ilicache_20211109 (de)
+AT "https://geo.so.ch/models/AGI"
+VERSION "2021-10-20"  =
+
+  TOPIC Repositories =
+
+    /** Repository, welche geklont wird.
+     */
+    CLASS CloneRepository =
+      /** Name des Repository
+       */
+      Name : MANDATORY TEXT*255;
+      /** Repository-URL
+       */
+      Url : MANDATORY INTERLIS.URI;
+      /** Letzte Ausführung des Klonens.
+       */
+      lastRun : INTERLIS.XMLDateTime;
+      /** Letzte erfolgreiche Ausführung des Klonens.
+       */
+      lastSuccessfulRun : INTERLIS.XMLDateTime;
+    END CloneRepository;
+
+  END Repositories;
+
+END SO_AGI_Ilicache_20211109.
