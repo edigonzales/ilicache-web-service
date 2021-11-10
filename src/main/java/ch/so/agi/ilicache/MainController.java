@@ -11,6 +11,8 @@ import java.nio.file.StandardCopyOption;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.apache.cayenne.ObjectContext;
+import org.apache.cayenne.query.ObjectSelect;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,6 +23,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
+
+import com.example.fubar.Clonerepository;
 
 import ch.interlis.ili2c.Ili2c;
 import ch.interlis.ili2c.Ili2cException;
@@ -40,6 +44,9 @@ public class MainController {
     
     @Autowired
     CloneService cloneService;
+    
+    @Autowired
+    ObjectContext objectContext;
 
     @GetMapping("/ping")
     public ResponseEntity<String> ping()  {
@@ -77,6 +84,12 @@ public class MainController {
         iomRootObj.setattrvalue("Owner", "_https://www.example.com_");        
         iomRootObj.setattrvalue("technicalContact", "_mailto:agi@bd.so.ch_");        
         iomRootObj.setattrvalue("furtherInformation", "_furtherInformation_");        
+        
+        
+        List<Clonerepository> repos = ObjectSelect.query(Clonerepository.class).select(objectContext);
+        for (Clonerepository repo: repos) {
+            log.info("****"+repo.getUrl());
+        }
         
         List<String> repositories = appProperties.getCloneRepositories();
         for (String repository : repositories) {

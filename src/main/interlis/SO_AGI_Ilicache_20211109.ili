@@ -13,15 +13,19 @@ VERSION "2021-10-20"  =
 
   TOPIC Repositories =
 
-    /** Repository, welche geklont wird.
-     */
-    CLASS CloneRepository =
+    CLASS Repository (ABSTRACT) =
       /** Name des Repository
        */
       Name : MANDATORY TEXT*255;
       /** Repository-URL
        */
       Url : MANDATORY INTERLIS.URI;
+    END Repository;
+
+    /** Repository, welche geklont wird.
+     */
+    CLASS CloneRepository
+    EXTENDS Repository =
       /** Letzte Ausführung des Klonens.
        */
       lastRun : INTERLIS.XMLDateTime;
@@ -29,6 +33,12 @@ VERSION "2021-10-20"  =
        */
       lastSuccessfulRun : INTERLIS.XMLDateTime;
     END CloneRepository;
+
+    /** Zusätzliche (nicht geklonte) Repositories
+     */
+    CLASS PeerRepository
+    EXTENDS Repository =
+    END PeerRepository;
 
   END Repositories;
 

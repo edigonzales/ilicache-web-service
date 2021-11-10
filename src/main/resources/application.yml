@@ -1,9 +1,16 @@
+logging.level.org.apache.cayenne.access.QueryLogger: WARN
+logging.level.oorg.apache.cayenne.log.JdbcEventLogger: WARN
+
+log4j.logger.org.apache.cayenne.access.QueryLogger: WARN
+
+
 # ========================
 # APPLICATION
 # ========================
 app:
     myVar: ${VAR:defaultValue}
-    cloneDirectory: ${CLONE_DIRECTORY}
+    ilicachedb: ${ILICACHEDB:/Users/stefan/tmp/ilicache/ilicachedb}
+    cloneDirectory: ${CLONE_DIRECTORY:/Users/stefan/tmp/ilicache/}
     cloneFrequency: 0 * * * *
     cloneRepositories:
       - http://models.interlis.ch

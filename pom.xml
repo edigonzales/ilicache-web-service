@@ -9,7 +9,7 @@
     <!-- lookup parent from repository -->
   </parent>
   <groupId>ch.so.agi</groupId>
-  <artifactId>demo</artifactId>
+  <artifactId>ilicache-web-service</artifactId>
   <version>0.0.1-SNAPSHOT</version>
   <name>ilicache-web-service</name>
   <description>ilicache web service</description>
@@ -45,6 +45,17 @@
       <artifactId>cayenne-server</artifactId>
       <version>4.1</version>
     </dependency>
+          <dependency>
+            <groupId>org.orbisgis</groupId>
+            <artifactId>h2gis</artifactId>
+            <version>1.5.0</version>
+          </dependency>
+          <dependency>
+            <groupId>com.h2database</groupId>
+            <artifactId>h2</artifactId>
+            <version>1.4.197</version>
+          </dependency>
+
     <dependency>
       <groupId>org.springframework.boot</groupId>
       <artifactId>spring-boot-devtools</artifactId>
@@ -71,16 +82,17 @@
           <cayenneProject>${project.basedir}/src/main/resources/cayenne/cayenne-project.xml</cayenneProject>
           <map>${project.basedir}/src/main/resources/cayenne/datamap.map.xml</map>
           <dataSource>
-            <url>jdbc:h2:${project.basedir}/src/main/interlis/ilicache</url>
+            <url>jdbc:h2:${project.basedir}/src/main/interlis/ilicachedb</url>
             <driver>org.h2.Driver</driver>
             <username/>
             <password/>
           </dataSource>
           <dbimport>
-            <defaultPackage>com.example.package</defaultPackage>
+            <defaultPackage>com.example.fubar</defaultPackage>
             <schema>PUBLIC</schema>
             <!-- <excludeTable>T_ILI2DB*.*</excludeTable>-->
             <includeTable>CLONEREPOSITORY</includeTable>
+            <includeTable>PEERREPOSITORY</includeTable>
           </dbimport>
         </configuration>
         <dependencies>
