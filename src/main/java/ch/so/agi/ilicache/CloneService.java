@@ -1,9 +1,15 @@
 package ch.so.agi.ilicache;
 
+import org.apache.cayenne.ObjectContext;
+import org.apache.cayenne.query.ObjectSelect;
+import org.apache.commons.io.FileUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.util.FileSystemUtils;
+
+import com.example.fubar.Clonerepository;
 
 import ch.interlis.ili2c.CheckReposIlis;
 import ch.interlis.ili2c.CloneRepos;
@@ -13,6 +19,8 @@ import ch.interlis.ili2c.config.FileEntryKind;
 import ch.interlis.ili2c.gui.UserSettings;
 
 import java.io.File;
+import java.io.IOException;
+import java.nio.file.Paths;
 import java.util.List;
 
 import javax.annotation.PostConstruct;
@@ -23,6 +31,9 @@ public class CloneService {
 
     @Autowired
     AppProperties appProperties;
+    
+    @Autowired
+    ObjectContext objectContext;
     
     // :/Users/stefan/tmp/ilicache/ java.io.tmpdir
     //String property = "java.io.tmpdir";
@@ -54,26 +65,62 @@ public class CloneService {
     }
 
     public void cloneRepositories() {
-        List<String> cloneRepositories = appProperties.getCloneRepositories();
-        for (String repository : cloneRepositories) {
+        List<Clonerepository> cloneRepositories = ObjectSelect.query(Clonerepository.class).select(objectContext);
+        for (Clonerepository repository : cloneRepositories) {
             cloneRepository(repository);
         }
     }
     
-    public void cloneRepository(String repository) {
+    public void cloneRepository(Clonerepository repository) {
         log.info("repository: " + repository);
+       
+        String rootCloneDirectory = appProperties.getCloneDirectory();
+        String stageRepoCloneDirectory = Paths.get(rootCloneDirectory, "stage", repository.getAname()).toFile().getAbsolutePath();
+        String liveRepoCloneDirectory = Paths.get(rootCloneDirectory, "live", repository.getAname()).toFile().getAbsolutePath();
         
-        UserSettings settings = new UserSettings();
-        //settings.setIlidirs(UserSettings.DEFAULT_ILIDIRS);
+        System.out.println(stageRepoCloneDirectory);
+        
+        try {
+            FileUtils.deleteDirectory(new File(stageRepoCloneDirectory));
+            
+            UserSettings settings = new UserSettings();
+            //settings.setIlidirs(UserSettings.DEFAULT_ILIDIRS);             
+            Configuration config = new Configuration();        
+            FileEntry file = new FileEntry(repository.getUrl(), FileEntryKind.ILIMODELFILE);
+            config.addFileEntry(file);
+            // CloneRepos erstellt Verzeichnis, falls es nicht vorhanden ist.
+            config.setOutputFile(new File(stageRepoCloneDirectory).getAbsolutePath());
+            boolean failed = new CloneRepos().cloneRepos(config, settings);
+            
+            if (!failed) {
+                if (new File(liveRepoCloneDirectory).exists()) {
+                    FileUtils.cleanDirectory(new File(liveRepoCloneDirectory));
+                } else {
+                    boolean created = new File(liveRepoCloneDirectory).mkdirs();
+                    if (!created) {
+                        throw new IOException("could not create live directory for model " + repository.getUrl());
+                    }
+                }
+                
+                FileUtils.copyDirectory(new File(stageRepoCloneDirectory), new File(liveRepoCloneDirectory));
 
-        // TODO: pro Repo ein Verzeichnis.
-        // TODO: stage und live. falls failed=false, kopieren von stage nach live. Sonst im GUI zeigen, dass Probleme
+                
+            }
+            
+
+            // TODO:
+            // - update database
+            // - write ilisite.xml
+            
+            
+            
+            
+        } catch (IOException e) {
+            e.printStackTrace();
+            log.error(e.getMessage());
+        }
+
         
-        Configuration config = new Configuration();        
-        FileEntry file = new FileEntry(repository, FileEntryKind.ILIMODELFILE);
-        config.addFileEntry(file);
-        config.setOutputFile(new File("/Users/stefan/tmp/ilicache/").getAbsolutePath());
-        boolean failed = new CloneRepos().cloneRepos(config, settings);
-        System.out.println(failed);
+        
     }
 }

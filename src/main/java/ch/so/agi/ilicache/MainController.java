@@ -25,6 +25,7 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import com.example.fubar.Clonerepository;
+import com.example.fubar.Peerrepository;
 
 import ch.interlis.ili2c.Ili2c;
 import ch.interlis.ili2c.Ili2cException;
@@ -42,8 +43,8 @@ public class MainController {
     @Autowired
     AppProperties appProperties;
     
-    @Autowired
-    CloneService cloneService;
+//    @Autowired
+//    CloneService cloneService;
     
     @Autowired
     ObjectContext objectContext;
@@ -85,26 +86,23 @@ public class MainController {
         iomRootObj.setattrvalue("technicalContact", "_mailto:agi@bd.so.ch_");        
         iomRootObj.setattrvalue("furtherInformation", "_furtherInformation_");        
         
-        
-        List<Clonerepository> repos = ObjectSelect.query(Clonerepository.class).select(objectContext);
-        for (Clonerepository repo: repos) {
-            log.info("****"+repo.getUrl());
-        }
-        
-        List<String> repositories = appProperties.getCloneRepositories();
-        for (String repository : repositories) {
-            Iom_jObject cacheSite = new Iom_jObject("IliSite09.RepositoryLocation_", null);
-            String repositoryName = repository.substring(repository.indexOf("/")+2);
+        // TODO: Bedingung stimmt nicht. Wenn wir eine Restarten kann der Clone ja weg sein aber trotzdem
+        // ein Datum vorhanden sein. Am ehesten gilt (zusätzlich) die Bedingung, dass das Verzeichnis 
+        // nicht leer sein darf. D.h. z.B. ilisite.xml und ilimodels.xml
+        List<Clonerepository> cloneRepositories = ObjectSelect.query(Clonerepository.class).where(Clonerepository.LASTSUCCESSFULRUN.isNotNull()).select(objectContext);
+        for (Clonerepository repository : cloneRepositories) {
+            Iom_jObject cloneSite = new Iom_jObject("IliSite09.RepositoryLocation_", null);
+            String repositoryName = repository.getUrl().substring(repository.getUrl().indexOf("/")+2);
             String value = ServletUriComponentsBuilder.fromCurrentContextPath().pathSegment(repositoryName).build().toUriString();
-            cacheSite.setattrvalue("value",  value);
-            iomRootObj.addattrobj("subsidiarySite", cacheSite);
+            cloneSite.setattrvalue("value",  value);
+            iomRootObj.addattrobj("subsidiarySite", cloneSite);
         }
         
         // TODO eventuell parentSite bei uns löschen? Damit wird sicher nicht in den anderen gesucht.
-        List<String> peerRepositories = appProperties.getPeerRepositories();
-        for (String repository : peerRepositories) {
+        List<Peerrepository> peerRepositories = ObjectSelect.query(Peerrepository.class).select(objectContext);
+        for (Peerrepository repository : peerRepositories) {
             Iom_jObject peerSite = new Iom_jObject("IliSite09.RepositoryLocation_", null);
-            peerSite.setattrvalue("value",  repository);
+            peerSite.setattrvalue("value",  repository.getUrl());
             // TODO peerSite scheint nicht zu funktionieren.
             // https://github.com/claeis/ili2c/issues/63
             iomRootObj.addattrobj("subsidiarySite", peerSite);
@@ -123,7 +121,7 @@ public class MainController {
                 .body(new InputStreamResource(is));
     }
     
-    // TODO move to AppConfig?
+    // TODO move to AppConfig oder Service?
     private TransferDescription getTransferDescription() throws Ili2cException, IOException {
         String ILISITE09 = "IliSite09-20091119.ili";
         

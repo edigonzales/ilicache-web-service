@@ -1,5 +1,7 @@
 package ch.so.agi.ilicache;
 
+import javax.annotation.PreDestroy;
+
 import org.apache.cayenne.ObjectContext;
 import org.apache.cayenne.configuration.server.ServerRuntime;
 import org.springframework.context.annotation.Bean;
@@ -8,6 +10,8 @@ import org.springframework.web.filter.ForwardedHeaderFilter;
 
 @Configuration
 public class AppConfig {
+    ServerRuntime cayenneRuntime;
+    
     @Bean
     public ForwardedHeaderFilter forwardedHeaderFilter() {
         return new ForwardedHeaderFilter();
@@ -15,7 +19,7 @@ public class AppConfig {
     
     @Bean
     public ObjectContext objectContext() {
-        ServerRuntime cayenneRuntime = ServerRuntime.builder()
+        cayenneRuntime = ServerRuntime.builder()
                 .url("jdbc:h2:/Users/stefan/tmp/ilicache/ilicachedb")
                 .jdbcDriver("org.h2.Driver")
                 .addConfig("cayenne/cayenne-project.xml")
@@ -23,5 +27,10 @@ public class AppConfig {
         ObjectContext context = cayenneRuntime.newContext();
         
         return context;
+    }
+    
+    @PreDestroy
+    public void shutdownCayenne() {
+        cayenneRuntime.shutdown();
     }
 }

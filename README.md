@@ -7,3 +7,10 @@ java -jar /Users/stefan/apps/ili2h2gis-4.6.0/ili2h2gis-4.6.0.jar --dbfile ilicac
 ```
 ./mvnw cayenne:cdbimport --settings .mvn/custom-settings.xml
 ```
+
+## TODO
+- Tests:
+ * Wie konfigurieren wegen DB?
+- ilisite.xml für geklonte Repos
+- lastRun etc in DB schreiben
+- static files exponieren
