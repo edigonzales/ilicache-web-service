@@ -1,16 +1,20 @@
 
 logging.level.org.apache.cayenne.log.JdbcEventLogger: INFO
 
-# ========================
-# APPLICATION
-# ========================
 app:
     myVar: ${VAR:defaultValue}
     ilicachedb: ${ILICACHEDB:/Users/stefan/tmp/ilicache/ilicachedb}
     cloneDirectory: ${CLONE_DIRECTORY:/Users/stefan/tmp/ilicache/}
-    cloneFrequency: 0 * * * *
     cloneRepositories:
       - http://models.interlis.ch
       #- http://models.geo.admin.ch
     peerRepositories:
       - https://geo.so.ch/models
+
+user:
+  cloneFrequency: 0 * * * *
+  cloneRespositories:
+    - http://models.interlis.ch
+  peerRepositories:
+    - https://geo.so.ch/models  
+    
