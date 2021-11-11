@@ -6,10 +6,10 @@ INTERLIS 2.3;
  *  !! 2021-11-09 | sz  | Ersterfassung
  *  !!==============================================================================
  */
-!!@ technicalContact="mailto:agi@bd.so.ch"
+!!@ technicalContact=mailto:agi@bd.so.ch
 MODEL SO_AGI_Ilicache_20211109 (de)
 AT "https://geo.so.ch/models/AGI"
-VERSION "2021-10-20"  =
+VERSION "2021-11-09"  =
 
   TOPIC Repositories =
 

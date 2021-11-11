@@ -9,14 +9,13 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.util.FileSystemUtils;
 
-import com.example.fubar.Clonerepository;
-
 import ch.interlis.ili2c.CheckReposIlis;
 import ch.interlis.ili2c.CloneRepos;
 import ch.interlis.ili2c.config.Configuration;
 import ch.interlis.ili2c.config.FileEntry;
 import ch.interlis.ili2c.config.FileEntryKind;
 import ch.interlis.ili2c.gui.UserSettings;
+import ch.so.agi.ilicache.cayenne.Clonerepository;
 
 import java.io.File;
 import java.io.IOException;
@@ -60,6 +59,7 @@ public class CloneService {
     
     @PostConstruct
     public void init() {
+        // TODO: PostConstruct wird vor dem CommandLineRunner ausgeführt. Somit macht es nix mehr (bei keiner oder leerer DB).
         log.info("* do something postconstruct");
         cloneRepositories();
     }

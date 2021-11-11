@@ -24,9 +24,6 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
-import com.example.fubar.Clonerepository;
-import com.example.fubar.Peerrepository;
-
 import ch.interlis.ili2c.Ili2c;
 import ch.interlis.ili2c.Ili2cException;
 import ch.interlis.ili2c.config.Configuration;
@@ -35,6 +32,8 @@ import ch.interlis.iom_j.Iom_jObject;
 import ch.interlis.iom_j.xtf.XtfWriter;
 import ch.interlis.iox.IoxException;
 import ch.interlis.iox.IoxWriter;
+import ch.so.agi.ilicache.cayenne.Clonerepository;
+import ch.so.agi.ilicache.cayenne.Peerrepository;
 
 @RestController
 public class MainController {

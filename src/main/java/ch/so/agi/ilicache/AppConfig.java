@@ -24,6 +24,7 @@ public class AppConfig {
                 .jdbcDriver("org.h2.Driver")
                 .addConfig("cayenne/cayenne-project.xml")
                 .build();
+        
         ObjectContext context = cayenneRuntime.newContext();
         
         return context;

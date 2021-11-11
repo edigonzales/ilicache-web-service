@@ -92,7 +92,7 @@
             <password/>
           </dataSource>
           <dbimport>
-            <defaultPackage>com.example.fubar</defaultPackage>
+            <defaultPackage>ch.so.agi.ilicache.cayenne</defaultPackage>
             <schema>PUBLIC</schema>
             <!-- <excludeTable>T_ILI2DB*.*</excludeTable>-->
             <includeTable>CLONEREPOSITORY</includeTable>
