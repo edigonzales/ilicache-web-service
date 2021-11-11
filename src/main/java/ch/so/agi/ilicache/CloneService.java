@@ -88,7 +88,7 @@ public class CloneService {
             Configuration config = new Configuration();        
             FileEntry file = new FileEntry(repository.getUrl(), FileEntryKind.ILIMODELFILE);
             config.addFileEntry(file);
-            // CloneRepos erstellt Verzeichnis, falls es nicht vorhanden ist.
+            // CloneRepos-Klasse erstellt Verzeichnis, falls es nicht vorhanden ist.
             config.setOutputFile(new File(stageRepoCloneDirectory).getAbsolutePath());
             boolean failed = new CloneRepos().cloneRepos(config, settings);
             
