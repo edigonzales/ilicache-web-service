@@ -29,7 +29,7 @@ public class CloneService {
     private final Logger log = LoggerFactory.getLogger(this.getClass());
 
     @Autowired
-    AppProperties appProperties;
+    UserProperties userProperties;
     
     @Autowired
     ObjectContext objectContext;
@@ -57,7 +57,7 @@ public class CloneService {
     // -> komplizierter wird es falls jedes Repo unterschiedlicher Refreshzyklus hat.
     // https://github.com/edigonzales/sdi-health-check/blob/main/src/main/java/ch/so/agi/healthcheck/SdiHealthCheckApplication.java
     
-    @PostConstruct
+    //@PostConstruct
     public void init() {
         // TODO: PostConstruct wird vor dem CommandLineRunner ausgeführt. Somit macht es nix mehr (bei keiner oder leerer DB).
         log.info("* do something postconstruct");
@@ -74,7 +74,7 @@ public class CloneService {
     public void cloneRepository(Clonerepository repository) {
         log.info("repository: " + repository);
        
-        String rootCloneDirectory = appProperties.getCloneDirectory();
+        String rootCloneDirectory = userProperties.getCloneDirectory();
         String stageRepoCloneDirectory = Paths.get(rootCloneDirectory, "stage", repository.getAname()).toFile().getAbsolutePath();
         String liveRepoCloneDirectory = Paths.get(rootCloneDirectory, "live", repository.getAname()).toFile().getAbsolutePath();
         

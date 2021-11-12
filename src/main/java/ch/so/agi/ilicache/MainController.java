@@ -16,6 +16,7 @@ import org.apache.cayenne.query.ObjectSelect;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.core.io.InputStreamResource;
 import org.springframework.http.HttpStatus;
@@ -32,6 +33,7 @@ import ch.interlis.iom_j.Iom_jObject;
 import ch.interlis.iom_j.xtf.XtfWriter;
 import ch.interlis.iox.IoxException;
 import ch.interlis.iox.IoxWriter;
+import ch.so.agi.ilicache.UserProperties.IliSite;
 import ch.so.agi.ilicache.cayenne.Clonerepository;
 import ch.so.agi.ilicache.cayenne.Peerrepository;
 
@@ -40,13 +42,17 @@ public class MainController {
     private final Logger log = LoggerFactory.getLogger(this.getClass());
 
     @Autowired
-    AppProperties appProperties;
+    UserProperties userProperties;
     
 //    @Autowired
 //    CloneService cloneService;
     
     @Autowired
     ObjectContext objectContext;
+    
+    @Autowired
+    @Qualifier("ilisite")
+    TransferDescription tdIliSite;
 
     @GetMapping("/ping")
     public ResponseEntity<String> ping()  {
@@ -55,7 +61,7 @@ public class MainController {
     
     @GetMapping("/properties")
     public ResponseEntity<?> properties()  {
-        return ResponseEntity.ok().body(appProperties);
+        return ResponseEntity.ok().body(userProperties);
     }
     
     @GetMapping("ilisite.xml")
@@ -63,12 +69,7 @@ public class MainController {
         String ILI_TOPIC="IliSite09.SiteMetadata";
         String BID="IliSite09.SiteMetadata";
 
-        TransferDescription td = null;
-        try {
-            td = getTransferDescription();
-        } catch (Ili2cException e) {
-            throw new IllegalStateException(e);
-        }
+        TransferDescription td = tdIliSite;
 
         Path tempDirWithPrefix = Files.createTempDirectory(Paths.get(System.getProperty("java.io.tmpdir")), "ilicache-web-service");
         File outputFile = Paths.get(tempDirWithPrefix.toFile().getAbsolutePath(), "ilisite.xml").toFile();
@@ -78,12 +79,13 @@ public class MainController {
 
         // TODO expose to AppProperties
         Iom_jObject iomRootObj = new Iom_jObject(ILI_TOPIC+".Site", String.valueOf(1));
-        iomRootObj.setattrvalue("Name", "_ilicache-web-service_");
-        iomRootObj.setattrvalue("Title", "_Title_");
-        iomRootObj.setattrvalue("shortDescription", "_shortDescription_");
-        iomRootObj.setattrvalue("Owner", "_https://www.example.com_");        
-        iomRootObj.setattrvalue("technicalContact", "_mailto:agi@bd.so.ch_");        
-        iomRootObj.setattrvalue("furtherInformation", "_furtherInformation_");        
+        IliSite iliSite = userProperties.getIliSite();
+        iomRootObj.setattrvalue("Name", iliSite.getName());
+        iomRootObj.setattrvalue("Title", iliSite.getTitle());
+        iomRootObj.setattrvalue("shortDescription", iliSite.getShortDescription());
+        iomRootObj.setattrvalue("Owner", iliSite.getOwner());        
+        iomRootObj.setattrvalue("technicalContact", iliSite.getTechnicalContact());        
+        iomRootObj.setattrvalue("furtherInformation", iliSite.getFurtherInformation());        
         
         // TODO: Bedingung stimmt nicht. Wenn wir eine Restarten kann der Clone ja weg sein aber trotzdem
         // ein Datum vorhanden sein. Am ehesten gilt (zusätzlich) die Bedingung, dass das Verzeichnis 
@@ -119,24 +121,4 @@ public class MainController {
                 .contentLength(outputFile.length())
                 .body(new InputStreamResource(is));
     }
-    
-    // TODO move to AppConfig oder Service?
-    private TransferDescription getTransferDescription() throws Ili2cException, IOException {
-        String ILISITE09 = "IliSite09-20091119.ili";
-        
-        String tmpdir = System.getProperty("java.io.tmpdir");
-        File iliSiteFile = Paths.get(tmpdir, ILISITE09).toFile();
-        InputStream resource = new ClassPathResource(ILISITE09).getInputStream();
-        Files.copy(resource, iliSiteFile.toPath(), StandardCopyOption.REPLACE_EXISTING);
-        
-        ArrayList<String> filev = new ArrayList<>(List.of(iliSiteFile.getAbsolutePath())); 
-        ch.interlis.ili2c.metamodel.TransferDescription td = Ili2c.compileIliFiles(filev, null);
-
-        if (td == null) {
-            throw new IllegalArgumentException("INTERLIS compiler failed"); 
-        }
-
-        return td;
-    }
-
 }
