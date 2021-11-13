@@ -6,6 +6,7 @@ import org.apache.commons.io.FileUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 import org.springframework.util.FileSystemUtils;
 
@@ -15,11 +16,20 @@ import ch.interlis.ili2c.config.Configuration;
 import ch.interlis.ili2c.config.FileEntry;
 import ch.interlis.ili2c.config.FileEntryKind;
 import ch.interlis.ili2c.gui.UserSettings;
+import ch.interlis.ili2c.metamodel.TransferDescription;
+import ch.interlis.iom_j.Iom_jObject;
+import ch.interlis.iom_j.xtf.XtfWriter;
+import ch.interlis.iox.IoxException;
+import ch.interlis.iox.IoxWriter;
+import ch.so.agi.ilicache.UserProperties.IliSite;
 import ch.so.agi.ilicache.cayenne.Clonerepository;
 
 import java.io.File;
 import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.time.LocalDateTime;
 import java.util.List;
 
 import javax.annotation.PostConstruct;
@@ -34,22 +44,9 @@ public class CloneService {
     @Autowired
     ObjectContext objectContext;
     
-    // :/Users/stefan/tmp/ilicache/ java.io.tmpdir
-    //String property = "java.io.tmpdir";
-    //String tempDir = System.getProperty(property);
-    // .iliclone?
-    
-    // stage. falls erfolgreich, kopieren nach live.
-    // immer einzeln, da früher oder später man eventuell nicht alle gleichzeitig clonen will
-    // ein originäres ilimodels.xml (resp. ilisite.xml) zeigt dann auf die cloned repos. Müssen die Klone auf das Mutter-Repo zeigen?
-    // -> mich dünkt nicht zwingend. Nur wenn ich bei einem einzelnen Clone mit Suchen beginnen würde.
-    // Ah, nicht sicher, ob ein ilisite.xml zwingend ein ilimodels benötigt. Falls nicht, ginge es
-    // elegant. Es gäbe nur subsidiary sites oder peer sites. Plus noch weitere (z.B. unsesr live geo.so.ch/models).
-    // notfalls ein leeres ilimodels.xml
-    
-    // Ausprobieren (nicht viel verloren)
-    // 1. ilisite.xml herstellen per Code
-    // 2. ein Repo clonen und files vom Filesystem verfügbar machen.
+    @Autowired
+    @Qualifier("ilisite")
+    TransferDescription tdIliSite;
     
     // Wie Cronjob umsetzen?
     // -> entweder 1 mal täglich (oder einstellbar) alle refreshen oder on demand einzelner Job
@@ -57,13 +54,6 @@ public class CloneService {
     // -> komplizierter wird es falls jedes Repo unterschiedlicher Refreshzyklus hat.
     // https://github.com/edigonzales/sdi-health-check/blob/main/src/main/java/ch/so/agi/healthcheck/SdiHealthCheckApplication.java
     
-    //@PostConstruct
-    public void init() {
-        // TODO: PostConstruct wird vor dem CommandLineRunner ausgeführt. Somit macht es nix mehr (bei keiner oder leerer DB).
-        log.info("* do something postconstruct");
-        cloneRepositories();
-    }
-
     public void cloneRepositories() {
         List<Clonerepository> cloneRepositories = ObjectSelect.query(Clonerepository.class).select(objectContext);
         for (Clonerepository repository : cloneRepositories) {
@@ -72,19 +62,20 @@ public class CloneService {
     }
     
     public void cloneRepository(Clonerepository repository) {
-        log.info("repository: " + repository);
-       
-        String rootCloneDirectory = userProperties.getCloneDirectory();
-        String stageRepoCloneDirectory = Paths.get(rootCloneDirectory, "stage", repository.getAname()).toFile().getAbsolutePath();
-        String liveRepoCloneDirectory = Paths.get(rootCloneDirectory, "live", repository.getAname()).toFile().getAbsolutePath();
+        log.debug("cloning: " + repository.getUrl());
         
-        System.out.println(stageRepoCloneDirectory);
+        String rootCloneDirectory = userProperties.getCloneDirectory();
+        log.debug("rootCloneDirectory: " + rootCloneDirectory);
+
+        String stageRepoCloneDirectory = Paths.get(rootCloneDirectory, "stage", repository.getAname()).toFile().getAbsolutePath();
+        String liveRepoCloneDirectory = Paths.get(rootCloneDirectory, "clone", repository.getAname()).toFile().getAbsolutePath();
+                  
+        LocalDateTime now = LocalDateTime.now();
         
         try {
             FileUtils.deleteDirectory(new File(stageRepoCloneDirectory));
             
             UserSettings settings = new UserSettings();
-            //settings.setIlidirs(UserSettings.DEFAULT_ILIDIRS);             
             Configuration config = new Configuration();        
             FileEntry file = new FileEntry(repository.getUrl(), FileEntryKind.ILIMODELFILE);
             config.addFileEntry(file);
@@ -94,6 +85,7 @@ public class CloneService {
             
             if (!failed) {
                 if (new File(liveRepoCloneDirectory).exists()) {
+                    log.debug("cleaning live directory: " + liveRepoCloneDirectory);
                     FileUtils.cleanDirectory(new File(liveRepoCloneDirectory));
                 } else {
                     boolean created = new File(liveRepoCloneDirectory).mkdirs();
@@ -102,25 +94,42 @@ public class CloneService {
                     }
                 }
                 
-                FileUtils.copyDirectory(new File(stageRepoCloneDirectory), new File(liveRepoCloneDirectory));
+                String ILI_TOPIC="IliSite09.SiteMetadata";
+                String BID="IliSite09.SiteMetadata";
 
+                TransferDescription td = tdIliSite;
+
+                File outputFile = Paths.get(stageRepoCloneDirectory, "ilisite.xml").toFile();
+                IoxWriter ioxWriter = new XtfWriter(outputFile, td);
+                ioxWriter.write(new ch.interlis.iox_j.StartTransferEvent("ilicache-web-service", "", null));
+                ioxWriter.write(new ch.interlis.iox_j.StartBasketEvent(ILI_TOPIC,BID));
+
+                Iom_jObject iomRootObj = new Iom_jObject(ILI_TOPIC+".Site", String.valueOf(1));
+                String repoName = "Clone of " + repository.getUrl();
+                if (repoName.length() >= 50) repoName = repoName.substring(0, 50);
+                iomRootObj.setattrvalue("Name", repoName);
+
+                ioxWriter.write(new ch.interlis.iox_j.ObjectEvent(iomRootObj));   
+
+                ioxWriter.write(new ch.interlis.iox_j.EndBasketEvent());
+                ioxWriter.write(new ch.interlis.iox_j.EndTransferEvent());
+                ioxWriter.flush();
+                ioxWriter.close();                
                 
-            }
-            
-
-            // TODO:
-            // - update database
-            // - write ilisite.xml
-            
-            
-            
-            
+                log.debug("copying from stage to live");
+                FileUtils.copyDirectory(new File(stageRepoCloneDirectory), new File(liveRepoCloneDirectory));
+                
+                repository.setLastsuccessfulrun(now);
+            }            
         } catch (IOException e) {
             e.printStackTrace();
             log.error(e.getMessage());
+        } catch (IoxException e) {
+            e.printStackTrace();
+            log.error(e.getMessage());
+        } finally {
+            repository.setLastrun(now);
+            objectContext.commitChanges();
         }
-
-        
-        
     }
 }

@@ -77,7 +77,6 @@ public class MainController {
         ioxWriter.write(new ch.interlis.iox_j.StartTransferEvent("ilicache-web-service", "", null));
         ioxWriter.write(new ch.interlis.iox_j.StartBasketEvent(ILI_TOPIC,BID));
 
-        // TODO expose to AppProperties
         Iom_jObject iomRootObj = new Iom_jObject(ILI_TOPIC+".Site", String.valueOf(1));
         IliSite iliSite = userProperties.getIliSite();
         iomRootObj.setattrvalue("Name", iliSite.getName());
@@ -94,7 +93,7 @@ public class MainController {
         for (Clonerepository repository : cloneRepositories) {
             Iom_jObject cloneSite = new Iom_jObject("IliSite09.RepositoryLocation_", null);
             String repositoryName = repository.getUrl().substring(repository.getUrl().indexOf("/")+2);
-            String value = ServletUriComponentsBuilder.fromCurrentContextPath().pathSegment(repositoryName).build().toUriString();
+            String value = ServletUriComponentsBuilder.fromCurrentContextPath().pathSegment("clone").pathSegment(repositoryName).build().toUriString();
             cloneSite.setattrvalue("value",  value);
             iomRootObj.addattrobj("subsidiarySite", cloneSite);
         }

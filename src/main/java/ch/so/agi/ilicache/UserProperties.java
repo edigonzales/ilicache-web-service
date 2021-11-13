@@ -13,6 +13,10 @@ public class UserProperties {
     
     private String cloneDirectory;
     
+    private String cloneCronExpression;
+    
+    private boolean cloneOnStartup;
+    
     private List<String> cloneRepositories = new ArrayList<String>();
     
     private List<String> peerRepositories = new ArrayList<String>();
@@ -31,6 +35,22 @@ public class UserProperties {
 
     public void setCloneDirectory(String cloneDirectory) {
         this.cloneDirectory = cloneDirectory;
+    }    
+    
+    public String getCloneCronExpression() {
+        return cloneCronExpression;
+    }
+
+    public void setCloneCronExpression(String cloneCronExpression) {
+        this.cloneCronExpression = cloneCronExpression;
+    }
+
+    public boolean isCloneOnStartup() {
+        return cloneOnStartup;
+    }
+
+    public void setCloneOnStartup(boolean cloneOnStartup) {
+        this.cloneOnStartup = cloneOnStartup;
     }
 
     public List<String> getCloneRepositories() {

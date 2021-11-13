@@ -1,5 +1,9 @@
-
+logging.level.root: ${ROOT_LOGLEVEL:INFO}
 logging.level.org.apache.cayenne.log.JdbcEventLogger: ${CAYENNE_LOGLEVEL:INFO}
+
+# https://github.com/spring-projects/spring-boot/wiki/Spring-Boot-2.4-Release-Notes#default-servlet-registration
+# https://stackoverflow.com/questions/64822250/illegalstateexception-after-upgrading-web-app-to-spring-boot-2-4
+server.servlet.register-default-servlet: true
 
 app:
     myVar: ${VAR:defaultValue}
@@ -14,8 +18,9 @@ user:
     technicalContact: mailto:agi@bd.so.ch
     furtherInformation: https://geo.so.ch
   cloneDirectory: ${CLONE_DIRECTORY:/Users/stefan/tmp/ilicache/}
-  cloneFrequency: 0 * * * *
-  cloneRespositories:
+  cloneCronExpression: 0 * * * *
+  cloneOnStartup: true
+  cloneRepositories:
     - http://models.interlis.ch
   peerRepositories:
     - https://geo.so.ch/models  

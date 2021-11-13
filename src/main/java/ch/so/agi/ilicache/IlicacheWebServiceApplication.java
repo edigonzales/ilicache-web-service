@@ -28,6 +28,9 @@ public class IlicacheWebServiceApplication {
 
     @Autowired
     ObjectContext objectContext;
+    
+    @Autowired 
+    CloneService cloneService;
 
 	public static void main(String[] args) {
 		SpringApplication.run(IlicacheWebServiceApplication.class, args);
@@ -51,12 +54,15 @@ public class IlicacheWebServiceApplication {
             
             List<String> peerRepositories = userProperties.getPeerRepositories();
             for (String repository : peerRepositories) {
-                
                 Peerrepository peerRepository = objectContext.newObject(Peerrepository.class);
                 peerRepository.setUrl(repository);
                 peerRepository.setAname(repository.substring(repository.indexOf("/")+2));
                 objectContext.commitChanges();
             }
+            
+            if (userProperties.isCloneOnStartup()) {
+                cloneService.cloneRepositories();
+            } 
         };
     }
 }
