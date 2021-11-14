@@ -62,7 +62,7 @@ public class CloneService {
         }
     }
     
-    public void cloneRepository(Clonerepository repository) {
+    private void cloneRepository(Clonerepository repository) {
         log.debug("cloning: " + repository.getUrl());
         
         String rootCloneDirectory = userProperties.getCloneDirectory();
