@@ -5,7 +5,7 @@ java -jar /Users/stefan/apps/ili2h2gis-4.6.0/ili2h2gis-4.6.0.jar --dbfile ilicac
 ```
 
 ```
-./mvnw cayenne:cdbimport --settings .mvn/custom-settings.xml
+./mvnw cayenne:cdbimport (--settings .mvn/custom-settings.xml)
 ```
 
 ## TODO
@@ -19,6 +19,8 @@ java -jar /Users/stefan/apps/ili2h2gis-4.6.0/ili2h2gis-4.6.0.jar --dbfile ilicac
 - dstDir für cgen
 - CloneRepoService und Scheduler trennen, damit clonen ganz ohne Scheduler möglich wird (auch einzeln Repos).
 - In "Prod"-Umgebung testen, d.h. mit Domain etc.x
+- Pipeline
+- Docker
 
 ## Run
 
