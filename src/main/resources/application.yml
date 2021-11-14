@@ -24,5 +24,3 @@ user:
     - http://models.interlis.ch
   peerRepositories:
     - https://geo.so.ch/models  
-    
-cloneCronExpression: ${user.cloneCronExpression}
