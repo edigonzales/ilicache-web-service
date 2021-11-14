@@ -18,3 +18,4 @@ java -jar /Users/stefan/apps/ili2h2gis-4.6.0/ili2h2gis-4.6.0.jar --dbfile ilicac
 - static files exponieren
 - dstDir für cgen
 - yml separieren (user only yml)
+- CloneRepoService und Scheduler trennen, damit clonen ganz ohne Scheduler möglich wird (auch einzeln Repos).

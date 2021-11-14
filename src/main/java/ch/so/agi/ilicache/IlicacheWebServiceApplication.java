@@ -63,6 +63,11 @@ public class IlicacheWebServiceApplication {
             if (userProperties.isCloneOnStartup()) {
                 cloneService.cloneRepositories();
             } 
+            
+            String LISTING_XSL = "listing.xsl";
+            File listingXslFile = Paths.get(userProperties.getCloneDirectory(), LISTING_XSL).toFile();
+            InputStream listingXslResource = new ClassPathResource(LISTING_XSL).getInputStream();
+            Files.copy(listingXslResource, listingXslFile.toPath(), StandardCopyOption.REPLACE_EXISTING);
         };
     }
 }

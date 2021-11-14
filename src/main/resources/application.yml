@@ -19,7 +19,7 @@ user:
     furtherInformation: https://geo.so.ch
   cloneDirectory: ${CLONE_DIRECTORY:/Users/stefan/tmp/ilicache/}
   cloneCronExpression: "0 0/2 * * * ?" #"0 0 2 * * ?"
-  cloneOnStartup: true
+  cloneOnStartup: false
   cloneRepositories:
     - http://models.interlis.ch
   peerRepositories:

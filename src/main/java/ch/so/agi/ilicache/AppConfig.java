@@ -18,14 +18,10 @@ import org.springframework.web.servlet.config.annotation.ResourceHandlerRegistry
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
 @Configuration
-//@EnableWebMvc
 public class AppConfig implements WebMvcConfigurer {
     @Autowired
     UserProperties userProperties;
-    
-//    @Autowired
-//    MyTomcatWebServerCustomizer tomcatServerCustomizer;
-    
+        
     ServerRuntime cayenneRuntime;
     
     @Bean
@@ -50,7 +46,7 @@ public class AppConfig implements WebMvcConfigurer {
     public void shutdownCayenne() {
         cayenneRuntime.shutdown();
     }
-    
+   
     // Directory listing funktioniert so nicht. Ist es überhaupt notwendig?
     // Umweg via MyTomcatWebServerCustomizer
 //    @Override 

@@ -43,10 +43,7 @@ public class MainController {
 
     @Autowired
     UserProperties userProperties;
-    
-//    @Autowired
-//    CloneService cloneService;
-    
+        
     @Autowired
     ObjectContext objectContext;
     
