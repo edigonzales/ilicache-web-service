@@ -7,6 +7,9 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
+import org.springframework.scheduling.annotation.EnableScheduling;
+import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 import org.springframework.util.FileSystemUtils;
 
@@ -35,6 +38,8 @@ import java.util.List;
 import javax.annotation.PostConstruct;
 
 @Service
+@EnableScheduling
+@ConditionalOnProperty(name = "scheduler.enabled", matchIfMissing = true)
 public class CloneService {
     private final Logger log = LoggerFactory.getLogger(this.getClass());
 
@@ -47,14 +52,10 @@ public class CloneService {
     @Autowired
     @Qualifier("ilisite")
     TransferDescription tdIliSite;
-    
-    // Wie Cronjob umsetzen?
-    // -> entweder 1 mal täglich (oder einstellbar) alle refreshen oder on demand einzelner Job
-    // -> refreshen einzelner Repos disable-bar
-    // -> komplizierter wird es falls jedes Repo unterschiedlicher Refreshzyklus hat.
-    // https://github.com/edigonzales/sdi-health-check/blob/main/src/main/java/ch/so/agi/healthcheck/SdiHealthCheckApplication.java
-    
+            
+    @Scheduled(cron = "${user.cloneCronExpression}")
     public void cloneRepositories() {
+        log.info("cloning repositories");
         List<Clonerepository> cloneRepositories = ObjectSelect.query(Clonerepository.class).select(objectContext);
         for (Clonerepository repository : cloneRepositories) {
             cloneRepository(repository);

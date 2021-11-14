@@ -19,8 +19,6 @@ public class MyTomcatWebServerCustomizer implements WebServerFactoryCustomizer<T
         TomcatContextCustomizer tomcatContextCustomizer = new TomcatContextCustomizer() {
             @Override
             public void customize(Context context) {
-                //String parentFolder = tomcatBaseDir.substring(0,tomcatBaseDir.lastIndexOf("\\"));
-                //String childFolder = tomcatBaseDir.substring(tomcatBaseDir.lastIndexOf("\\") + 1);
                 String childFolder = "clone";
                 context.setDocBase("/Users/stefan/tmp/ilicache/");                
                 Wrapper defServlet = (Wrapper) context.findChild("default");
@@ -28,8 +26,8 @@ public class MyTomcatWebServerCustomizer implements WebServerFactoryCustomizer<T
                 defServlet.addInitParameter("sortListings", "true");
                 defServlet.addInitParameter("sortDirectoriesFirst", "true");
                 defServlet.addInitParameter("readOnly", "true");
-                //defServlet.addInitParameter("contextXsltFile", "/clone/listing.xsl");
-                defServlet.addMapping("/"+childFolder+"/*");
+                defServlet.addInitParameter("contextXsltFile", "/clone/listing.xsl");
+                defServlet.addMapping("/"+childFolder+"/*");                
             }
         };
         factory.addContextCustomizers(tomcatContextCustomizer);        

@@ -18,10 +18,11 @@ user:
     technicalContact: mailto:agi@bd.so.ch
     furtherInformation: https://geo.so.ch
   cloneDirectory: ${CLONE_DIRECTORY:/Users/stefan/tmp/ilicache/}
-  cloneCronExpression: 0 * * * *
+  cloneCronExpression: "0 0/2 * * * ?" #"0 0 2 * * ?"
   cloneOnStartup: true
   cloneRepositories:
     - http://models.interlis.ch
   peerRepositories:
     - https://geo.so.ch/models  
     
+cloneCronExpression: ${user.cloneCronExpression}
