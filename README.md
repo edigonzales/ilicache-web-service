@@ -15,12 +15,10 @@ java -jar /Users/stefan/apps/ili2h2gis-4.6.0/ili2h2gis-4.6.0.jar --dbfile ilicac
  * Wie konfigurieren wegen DB? -> eigenes application-test.yml (falls nötig). Dann muss es annotiert werden.
  * Können die Repo in die DB geschrieben werden?
  * cloneRepositories() testen
-- ilisite.xml für geklonte Repos
-- lastRun etc in DB schreiben
-- static files exponieren
+- (static files exponieren). Mal schauen, ob noch alles so funktioniert wie es sollte. Insbesondere, wenn die Anwendung selber auch static resources hat.
 - dstDir für cgen
-- yml separieren (user only yml)
 - CloneRepoService und Scheduler trennen, damit clonen ganz ohne Scheduler möglich wird (auch einzeln Repos).
+- In "Prod"-Umgebung testen, d.h. mit Domain etc.x
 
 ## Run
 
