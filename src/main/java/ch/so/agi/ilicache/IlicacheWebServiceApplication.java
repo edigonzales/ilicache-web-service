@@ -40,7 +40,7 @@ public class IlicacheWebServiceApplication {
     public CommandLineRunner init() {
         return args -> {
             //TODO: Immer überschreiben?
-            File dbFile = Paths.get(appProperties.getIlicachedb()).toFile();
+            File dbFile = Paths.get(appProperties.getIlicachedb()+".mv.db").toFile();
             InputStream resource = new ClassPathResource("ilicachedb.mv.db").getInputStream();
             Files.copy(resource, dbFile.toPath(), StandardCopyOption.REPLACE_EXISTING);
 

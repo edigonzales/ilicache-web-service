@@ -11,10 +11,7 @@ import org.springframework.stereotype.Component;
 
 @Component
 public class MyTomcatWebServerCustomizer implements WebServerFactoryCustomizer<TomcatServletWebServerFactory>  {
-
-    //@Value("${tomcat.file.base}")  // C:\\some\\parent\\child
-    //String tomcatBaseDir;
-
+    
     @Autowired
     UserProperties userProperties;
     

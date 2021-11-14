@@ -22,6 +22,9 @@ public class AppConfig implements WebMvcConfigurer {
     @Autowired
     UserProperties userProperties;
         
+    @Autowired
+    AppProperties appProperties;
+
     ServerRuntime cayenneRuntime;
     
     @Bean
@@ -32,7 +35,7 @@ public class AppConfig implements WebMvcConfigurer {
     @Bean
     public ObjectContext objectContext() {
         cayenneRuntime = ServerRuntime.builder()
-                .url("jdbc:h2:/Users/stefan/tmp/ilicache/ilicachedb")
+                .url("jdbc:h2:"+new File(appProperties.getIlicachedb()).getAbsolutePath())
                 .jdbcDriver("org.h2.Driver")
                 .addConfig("cayenne/cayenne-project.xml")
                 .build();

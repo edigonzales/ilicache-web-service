@@ -7,7 +7,7 @@ server.servlet.register-default-servlet: true
 
 app:
     myVar: ${VAR:defaultValue}
-    ilicachedb: ${ILICACHEDB:/Users/stefan/tmp/ilicache/ilicachedb.mv.db}
+    ilicachedb: ${ILICACHEDB:/Users/stefan/tmp/ilicache/ilicachedb}
 
 user:
   iliSite:
