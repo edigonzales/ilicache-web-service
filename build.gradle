@@ -5,15 +5,16 @@ buildscript {
     }
     // add Cayenne Gradle Plugin
     dependencies {
-        classpath group: 'org.apache.cayenne.plugins', name: 'cayenne-gradle-plugin', version: '4.1'
+        classpath group: 'com.h2database', name: 'h2', version: '1.4.197'
+        classpath group: 'org.orbisgis', name: 'h2gis', version: '1.5.0'
+        classpath group: 'org.apache.cayenne.plugins', name: 'cayenne-gradle-plugin', version: '4.1.1'
     }
 }
 
 plugins {
-	id 'org.springframework.boot' version '2.6.0-RC1'
-	id 'io.spring.dependency-management' version '1.0.11.RELEASE'
-	id 'java'
-	//id 'org.springframework.experimental.aot' version '0.11.0-M2'
+    id 'org.springframework.boot' version '2.6.7'
+    id 'io.spring.dependency-management' version '1.0.11.RELEASE'
+    id 'java'
 }
 
 apply from: "$rootDir/gradle/versioning.gradle"
@@ -24,9 +25,8 @@ group = 'ch.so.agi'
 sourceCompatibility = '11'
 
 repositories {
-	maven { url 'https://repo.spring.io/milestone' }
-    maven { url "http://jars.interlis.ch"; allowInsecureProtocol true }
-	mavenCentral()
+    maven { url "https://jars.interlis.ch" }
+    mavenCentral()
 }
 
 dependencies {
@@ -39,41 +39,56 @@ dependencies {
     implementation 'ch.interlis:ili2c-core:5.2.3'
     implementation 'ch.interlis:ili2c-tool:5.2.3'
 
-    implementation 'org.apache.cayenne:cayenne-server:4.1'
+    implementation 'org.apache.cayenne:cayenne-server:4.1.1'
     implementation 'com.h2database:h2:1.4.197'
 
-	developmentOnly 'org.springframework.boot:spring-boot-devtools'
-	testImplementation 'org.springframework.boot:spring-boot-starter-test'
+    developmentOnly 'org.springframework.boot:spring-boot-devtools'
+    testImplementation 'org.springframework.boot:spring-boot-starter-test'
 }
 
 test {
-	useJUnitPlatform()
+    useJUnitPlatform()
 }
 
 bootBuildImage {
-	builder = 'paketobuildpacks/builder:tiny'
-	//environment = ['BP_NATIVE_IMAGE': 'true']
+    builder = 'paketobuildpacks/builder:tiny'
+    //environment = ['BP_NATIVE_IMAGE': 'true']
 }
 
-cayenne.defaultDataMap 'datamap.map.xml'
+cayenne.defaultDataMap "$projectDir/src/main/resources/cayenne/datamap.map.xml"
+
+cgen {
+    client = false
+    mode = 'entity'
+    overwrite = true
+    createPKProperties = true
+}
 
 cdbimport {
-    map 'datamap.map.xml'
+    map "$projectDir/src/main/resources/cayenne/datamap.map.xml"
     
-    cayenneProject 'cayenne-project.xml'
+    cayenneProject "$projectDir/src/main/resources/cayenne/cayenne-project.xml"
     
     dataSource {
         driver 'org.h2.Driver'
-        url 'jdbc:h2:/Users/stefan/sources/ilicache-web-service/src/main/interlis/ilicache.mv.db'
+        //url 'jdbc:h2:/Users/stefan/sources/ilicache-web-service/src/main/interlis/ilicache.mv.db'
+        url "jdbc:h2:${projectDir}/src/main/interlis/ilicachedb"
         username ''
         password ''
     }
-    
+
     dbImport {
         usePrimitives false
-        defaultPackage 'org.apache.cayenne.test'
+        defaultPackage 'ch.so.agi.ilicache.cayenne'
         
-        tableTypes 'TABLE', 'VIEW'
+            schema {
+                name 'PUBLIC'
+                includeTable 'CLONEREPOSITORY'
+                includeTable 'PEERREPOSITORY'
+            }
+
+
     }
+
 }
 

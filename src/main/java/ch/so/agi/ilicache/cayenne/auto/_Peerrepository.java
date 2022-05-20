@@ -5,6 +5,7 @@ import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 
 import org.apache.cayenne.BaseDataObject;
+import org.apache.cayenne.exp.ExpressionFactory;
 import org.apache.cayenne.exp.Property;
 
 /**
@@ -17,6 +18,7 @@ public abstract class _Peerrepository extends BaseDataObject {
 
     private static final long serialVersionUID = 1L; 
 
+    public static final Property<Long> T_ID_PK_PROPERTY = Property.create(ExpressionFactory.dbPathExp("T_ID"), Long.class);
     public static final String T_ID_PK_COLUMN = "T_ID";
 
     public static final Property<String> ANAME = Property.create("aname", String.class);
