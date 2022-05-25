@@ -1,9 +1,7 @@
 buildscript {
-    // add Maven Central repository
     repositories {
         mavenCentral()
     }
-    // add Cayenne Gradle Plugin
     dependencies {
         classpath group: 'com.h2database', name: 'h2', version: '1.4.197'
         classpath group: 'org.orbisgis', name: 'h2gis', version: '1.5.0'
@@ -66,7 +64,7 @@ cgen {
     client = false
     mode = 'entity'
     overwrite = true
-    createPKProperties = true
+    //createPKProperties = true
 }
 
 cdbimport {
@@ -85,15 +83,24 @@ cdbimport {
     dbImport {
         usePrimitives false
         defaultPackage 'ch.so.agi.ilicache.cayenne'
-        
-            schema {
-                name 'PUBLIC'
-                includeTable 'CLONEREPOSITORY'
-                includeTable 'PEERREPOSITORY'
-            }
-
-
+        schema {
+            name 'PUBLIC'
+            includeTable 'CLONEREPOSITORY'
+            includeTable 'PEERREPOSITORY'
+        }
     }
-
 }
+/*
+dockerTest.finalizedBy('stopDockerContainer')
+task updateDatamap(dependsOn: "exportData") {
+    description = "Ersetzt verschiedene Elemente (Host, Pfad, etc.) der WMS-Requests."
+    doLast {
+        ant.replace(
+        file: file(Paths.get("$rootDir", xtfFileName)),
+        token: '${wmsHost}',
+        value: 'https://' + geoservicesHostName,
+        encoding: 'UTF-8')
+    }
+}*/
+
 

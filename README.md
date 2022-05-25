@@ -8,6 +8,13 @@ java -jar /Users/stefan/apps/ili2h2gis-4.6.0/ili2h2gis-4.6.0.jar --dbfile ilicac
 ./mvnw cayenne:cdbimport (--settings .mvn/custom-settings.xml)
 ```
 
+
+```
+./gradlew clean cdbimport cgen
+```
+
+ isGenerated="true" 
+
 ## TODO
 - PK creation strategy with maven plugin?
 - data source in project.xml (wird das dann überschrieben?)

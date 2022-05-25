@@ -13,6 +13,7 @@ import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Configuration;
 import org.springframework.core.io.ClassPathResource;
 
 import ch.so.agi.ilicache.cayenne.Clonerepository;
@@ -33,8 +34,8 @@ public class IlicacheWebServiceApplication {
     CloneService cloneService;
 
 	public static void main(String[] args) {
+	    System.out.println("gaga");
 		SpringApplication.run(IlicacheWebServiceApplication.class, args);
-		System.out.println("hallo welt fubar");
 	}
 
     @Bean
