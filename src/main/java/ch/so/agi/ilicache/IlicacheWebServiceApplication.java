@@ -34,6 +34,7 @@ public class IlicacheWebServiceApplication {
 
 	public static void main(String[] args) {
 		SpringApplication.run(IlicacheWebServiceApplication.class, args);
+		System.out.println("hallo welt fubar");
 	}
 
     @Bean
@@ -43,6 +44,8 @@ public class IlicacheWebServiceApplication {
             File dbFile = Paths.get(appProperties.getIlicachedb()+".mv.db").toFile();
             InputStream resource = new ClassPathResource("ilicachedb.mv.db").getInputStream();
             Files.copy(resource, dbFile.toPath(), StandardCopyOption.REPLACE_EXISTING);
+
+            System.out.println("fubar");
 
             List<String> cloneRepositories = userProperties.getCloneRepositories();
             for (String repository : cloneRepositories) {

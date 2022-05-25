@@ -32,6 +32,8 @@ repositories {
 dependencies {
     implementation 'org.springframework.boot:spring-boot-starter-web'
     implementation 'org.springframework.boot:spring-boot-starter-actuator'
+    developmentOnly 'org.springframework.boot:spring-boot-devtools'
+  
     //implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
     //runtimeOnly('com.h2database:h2')
     
@@ -39,8 +41,11 @@ dependencies {
     implementation 'ch.interlis:ili2c-core:5.2.3'
     implementation 'ch.interlis:ili2c-tool:5.2.3'
 
+    implementation 'commons-io:commons-io:2.11.0'
+
     implementation 'org.apache.cayenne:cayenne-server:4.1.1'
     implementation 'com.h2database:h2:1.4.197'
+    implementation 'org.orbisgis:h2gis:1.5.0'
 
     developmentOnly 'org.springframework.boot:spring-boot-devtools'
     testImplementation 'org.springframework.boot:spring-boot-starter-test'
