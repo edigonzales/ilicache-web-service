@@ -25,7 +25,7 @@ public class IlicacheWebServiceApplication {
     AppProperties appProperties;
     
     @Autowired
-    UserProperties userProperties;
+    UserConfig userConfig;
 
     @Autowired
     ObjectContext objectContext;
@@ -48,28 +48,29 @@ public class IlicacheWebServiceApplication {
 
             System.out.println("fubar");
 
-            List<String> cloneRepositories = userProperties.getCloneRepositories();
-            for (String repository : cloneRepositories) {
+            String cloneRepositories = userConfig.getCloneRepositories();
+            //List<String> cloneRepositories = userProperties.getCloneRepositories();
+            for (String repository : cloneRepositories.split(",")) {
                 Clonerepository cloneRepository = objectContext.newObject(Clonerepository.class);
                 cloneRepository.setUrl(repository);
                 cloneRepository.setAname(repository.substring(repository.indexOf("/")+2));
                 objectContext.commitChanges();
             }
             
-            List<String> peerRepositories = userProperties.getPeerRepositories();
-            for (String repository : peerRepositories) {
-                Peerrepository peerRepository = objectContext.newObject(Peerrepository.class);
-                peerRepository.setUrl(repository);
-                peerRepository.setAname(repository.substring(repository.indexOf("/")+2));
-                objectContext.commitChanges();
-            }
+//            List<String> peerRepositories = userProperties.getPeerRepositories();
+//            for (String repository : peerRepositories) {
+//                Peerrepository peerRepository = objectContext.newObject(Peerrepository.class);
+//                peerRepository.setUrl(repository);
+//                peerRepository.setAname(repository.substring(repository.indexOf("/")+2));
+//                objectContext.commitChanges();
+//            }
             
-            if (userProperties.isCloneOnStartup()) {
+            if (userConfig.isCloneOnStartup()) {
                 cloneService.cloneRepositories();
             } 
             
             String LISTING_XSL = "listing.xsl";
-            File listingXslFile = Paths.get(userProperties.getCloneDirectory(), LISTING_XSL).toFile();
+            File listingXslFile = Paths.get(userConfig.getCloneDirectory(), LISTING_XSL).toFile();
             InputStream listingXslResource = new ClassPathResource(LISTING_XSL).getInputStream();
             Files.copy(listingXslResource, listingXslFile.toPath(), StandardCopyOption.REPLACE_EXISTING);
         };

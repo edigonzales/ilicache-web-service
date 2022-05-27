@@ -13,7 +13,7 @@ import org.springframework.stereotype.Component;
 public class MyTomcatWebServerCustomizer implements WebServerFactoryCustomizer<TomcatServletWebServerFactory>  {
     
     @Autowired
-    UserProperties userProperties;
+    UserConfig userProperties;
     
     @Override
     public void customize(TomcatServletWebServerFactory factory) {

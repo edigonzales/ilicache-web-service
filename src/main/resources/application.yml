@@ -7,20 +7,19 @@ server.servlet.register-default-servlet: true
 
 app:
     myVar: ${VAR:defaultValue}
-    ilicachedb: ${ILICACHEDB:/Users/stefan/tmp/ilicache/ilicachedb}
+    ilicachedb: ${ILICACHEDB:/Users/stefan/tmp/ilicache/ilicachedb} #/tmp/
 
 user:
   iliSite:
-    name: cache.models.geo.so.ch
-    title: INTERLIS repositories cache
-    shortDescription: Cache of some INTERLIS repositories.
-    owner: https://geo.so.ch
-    technicalContact: mailto:agi@bd.so.ch
-    furtherInformation: https://geo.so.ch
+    name: ${ILISITE_NAME:interlis-model-repositories-mirror}
+    title: ${ILISITE_TITLE:INTERLIS model repositories mirror}
+    shortDescription: ${ILISITE_SHORT_DESCRIPTION:A mirror of INTERLIS model repositories}
+    owner: ${ILISITE_OWNER:https://geo.so.ch}
+    technicalContact: ${ILISITE_TECHNICAL_CONTACT:mailto:agi@bd.so.ch} 
+    furtherInformation: ${ILISITE_FURTHER_INFORMATION:}
   cloneDirectory: ${CLONE_DIRECTORY:/Users/stefan/tmp/ilicache/}
-  cloneCronExpression: "0 0/2 * * * ?" #"0 0 2 * * ?"
-  cloneOnStartup: false
-  cloneRepositories:
-    - http://models.interlis.ch
-  peerRepositories:
-    - https://geo.so.ch/models  
+  cloneCronExpression: ${CLONE_CRON_EXPRESSION:0 0/2 * * * ?} #"0 0 2 * * ?"
+  cloneOnStartup: ${CLONE_ON_STARTUP:false}
+  cloneRepositories: ${CLONE_REPOSITORIES:http://models.interlis.ch}
+  #peerRepositories: ${PEER_REPOSITORIES:http://models.interlis.ch}
+   

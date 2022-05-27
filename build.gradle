@@ -1,3 +1,5 @@
+import java.nio.file.Paths
+
 buildscript {
     repositories {
         mavenCentral()
@@ -90,17 +92,21 @@ cdbimport {
         }
     }
 }
-/*
-dockerTest.finalizedBy('stopDockerContainer')
-task updateDatamap(dependsOn: "exportData") {
-    description = "Ersetzt verschiedene Elemente (Host, Pfad, etc.) der WMS-Requests."
+
+
+cdbimport.finalizedBy('updateDatamap')
+
+task updateDatamap() {
+    description = "Change PK creation strategy"
     doLast {
         ant.replace(
-        file: file(Paths.get("$rootDir", xtfFileName)),
-        token: '${wmsHost}',
-        value: 'https://' + geoservicesHostName,
+        file: file(Paths.get("$rootDir","src","main","resources","cayenne","datamap.map.xml")),
+        token: 'isPrimaryKey=\"true\"',
+        value: 'isPrimaryKey=\"true\" isGenerated=\"true\"',
         encoding: 'UTF-8')
     }
-}*/
+}
 
-
+task deleteCayenneConfig(type: Delete) {
+    delete file(Paths.get("$rootDir","src","main","resources","cayenne","datamap.map.xml")), file(Paths.get("$rootDir","src","main","resources","cayenne","cayenne-project.xml"))
+}

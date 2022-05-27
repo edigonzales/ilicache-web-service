@@ -8,19 +8,14 @@ import org.springframework.stereotype.Component;
 
 @Component
 @ConfigurationProperties("user")
-public class UserProperties {
+public class UserConfig {
     private IliSite iliSite;
-    
     private String cloneDirectory;
-    
     private String cloneCronExpression;
-    
     private boolean cloneOnStartup;
+    private String cloneRepositories;    
+    private String peerRepositories;
     
-    private List<String> cloneRepositories = new ArrayList<String>();
-    
-    private List<String> peerRepositories = new ArrayList<String>();
-
     public IliSite getIliSite() {
         return iliSite;
     }
@@ -35,8 +30,8 @@ public class UserProperties {
 
     public void setCloneDirectory(String cloneDirectory) {
         this.cloneDirectory = cloneDirectory;
-    }    
-    
+    }
+
     public String getCloneCronExpression() {
         return cloneCronExpression;
     }
@@ -52,34 +47,29 @@ public class UserProperties {
     public void setCloneOnStartup(boolean cloneOnStartup) {
         this.cloneOnStartup = cloneOnStartup;
     }
-
-    public List<String> getCloneRepositories() {
+    
+    public String getCloneRepositories() {
         return cloneRepositories;
     }
 
-    public void setCloneRepositories(List<String> cloneRepositories) {
+    public void setCloneRepositories(String cloneRepositories) {
         this.cloneRepositories = cloneRepositories;
     }
 
-    public List<String> getPeerRepositories() {
+    public String getPeerRepositories() {
         return peerRepositories;
     }
 
-    public void setPeerRepositories(List<String> peerRepositories) {
+    public void setPeerRepositories(String peerRepositories) {
         this.peerRepositories = peerRepositories;
     }
-    
+
     public static class IliSite {
         private String name;
-        
         private String title;
-        
         private String shortDescription;
-        
         private String owner;
-        
         private String technicalContact;
-        
         private String furtherInformation;
 
         public String getName() {

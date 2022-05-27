@@ -20,7 +20,7 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 @Configuration
 public class AppConfig implements WebMvcConfigurer {
     @Autowired
-    UserProperties userProperties;
+    UserConfig userProperties;
         
     @Autowired
     AppProperties appProperties;

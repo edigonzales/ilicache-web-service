@@ -33,7 +33,7 @@ import ch.interlis.iom_j.Iom_jObject;
 import ch.interlis.iom_j.xtf.XtfWriter;
 import ch.interlis.iox.IoxException;
 import ch.interlis.iox.IoxWriter;
-import ch.so.agi.ilicache.UserProperties.IliSite;
+import ch.so.agi.ilicache.UserConfig.IliSite;
 import ch.so.agi.ilicache.cayenne.Clonerepository;
 import ch.so.agi.ilicache.cayenne.Peerrepository;
 
@@ -42,7 +42,7 @@ public class MainController {
     private final Logger log = LoggerFactory.getLogger(this.getClass());
 
     @Autowired
-    UserProperties userProperties;
+    UserConfig userConfig;
         
     @Autowired
     ObjectContext objectContext;
@@ -52,17 +52,19 @@ public class MainController {
     TransferDescription tdIliSite;
 
     @GetMapping("/ping")
-    public ResponseEntity<String> ping()  {
-        return new ResponseEntity<String>("ilicache-web-service", HttpStatus.OK);
+    public ResponseEntity<?> ping()  {
+        //return new ResponseEntity<String>("ilicache-web-service", HttpStatus.OK);
+        return ResponseEntity.ok().body(userConfig);
     }
     
-    @GetMapping("/properties")
+    @GetMapping("/config")
     public ResponseEntity<?> properties()  {
-        return ResponseEntity.ok().body(userProperties);
+        System.out.println("hallo welt.");
+        return ResponseEntity.ok().body(userConfig);
     }
     
     @GetMapping("ilisite.xml")
-    public ResponseEntity<?> ilidata() throws IOException, IoxException {
+    public ResponseEntity<?> ilisite() throws IOException, IoxException {
         String ILI_TOPIC="IliSite09.SiteMetadata";
         String BID="IliSite09.SiteMetadata";
 
@@ -75,7 +77,7 @@ public class MainController {
         ioxWriter.write(new ch.interlis.iox_j.StartBasketEvent(ILI_TOPIC,BID));
 
         Iom_jObject iomRootObj = new Iom_jObject(ILI_TOPIC+".Site", String.valueOf(1));
-        IliSite iliSite = userProperties.getIliSite();
+        IliSite iliSite = userConfig.getIliSite();
         iomRootObj.setattrvalue("Name", iliSite.getName());
         iomRootObj.setattrvalue("Title", iliSite.getTitle());
         iomRootObj.setattrvalue("shortDescription", iliSite.getShortDescription());

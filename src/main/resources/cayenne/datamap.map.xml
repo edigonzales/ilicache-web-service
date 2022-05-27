@@ -9,12 +9,12 @@
 		<db-attribute name="ANAME" type="VARCHAR" isMandatory="true" length="255"/>
 		<db-attribute name="LASTRUN" type="TIMESTAMP" length="26"/>
 		<db-attribute name="LASTSUCCESSFULRUN" type="TIMESTAMP" length="26"/>
-		<db-attribute name="T_ID" type="BIGINT" isPrimaryKey="true" isGenerated="true"  isMandatory="true" length="19"/>
+		<db-attribute name="T_ID" type="BIGINT" isPrimaryKey="true" isGenerated="true" isMandatory="true" length="19"/>
 		<db-attribute name="URL" type="VARCHAR" isMandatory="true" length="1023"/>
 	</db-entity>
 	<db-entity name="PEERREPOSITORY" schema="PUBLIC" catalog="ILICACHEDB">
 		<db-attribute name="ANAME" type="VARCHAR" isMandatory="true" length="255"/>
-		<db-attribute name="T_ID" type="BIGINT" isPrimaryKey="true" isGenerated="true"  isMandatory="true" length="19"/>
+		<db-attribute name="T_ID" type="BIGINT" isPrimaryKey="true" isGenerated="true" isMandatory="true" length="19"/>
 		<db-attribute name="URL" type="VARCHAR" isMandatory="true" length="1023"/>
 	</db-entity>
 	<obj-entity name="Clonerepository" className="ch.so.agi.ilicache.cayenne.Clonerepository" dbEntityName="CLONEREPOSITORY">

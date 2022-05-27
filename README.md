@@ -10,6 +10,7 @@ java -jar /Users/stefan/apps/ili2h2gis-4.6.0/ili2h2gis-4.6.0.jar --dbfile ilicac
 
 
 ```
+./gradlew clean deleteCayenneConfig cdbimport cgen
 ./gradlew clean cdbimport cgen
 ```
 

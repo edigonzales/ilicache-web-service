@@ -24,7 +24,7 @@ import ch.interlis.iom_j.Iom_jObject;
 import ch.interlis.iom_j.xtf.XtfWriter;
 import ch.interlis.iox.IoxException;
 import ch.interlis.iox.IoxWriter;
-import ch.so.agi.ilicache.UserProperties.IliSite;
+import ch.so.agi.ilicache.UserConfig.IliSite;
 import ch.so.agi.ilicache.cayenne.Clonerepository;
 
 import java.io.File;
@@ -44,7 +44,7 @@ public class CloneService {
     private final Logger log = LoggerFactory.getLogger(this.getClass());
 
     @Autowired
-    UserProperties userProperties;
+    UserConfig userProperties;
     
     @Autowired
     ObjectContext objectContext;
