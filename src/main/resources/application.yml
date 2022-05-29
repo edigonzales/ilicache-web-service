@@ -5,6 +5,11 @@ logging.level.org.apache.cayenne.log.JdbcEventLogger: ${CAYENNE_LOGLEVEL:DEBUG}
 # https://stackoverflow.com/questions/64822250/illegalstateexception-after-upgrading-web-app-to-spring-boot-2-4
 server.servlet.register-default-servlet: true
 
+management:
+  endpoint:
+    health:
+      show-details: always
+
 app:
     myVar: ${VAR:defaultValue}  
     liveRepoCloneDirectoryName: live
