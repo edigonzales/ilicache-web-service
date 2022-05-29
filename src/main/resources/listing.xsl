@@ -1,7 +1,6 @@
 <?xml version="1.0"?>
 
-<xsl:stylesheet xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
-  version="1.0">
+<xsl:stylesheet xmlns:xsl="http://www.w3.org/1999/XSL/Transform" version="1.0">
 
   <xsl:output method="html" encoding="iso-8859-1" indent="no"/>
 
@@ -13,23 +12,22 @@
         <xsl:value-of select="@directory"/>
       </title>
       <style>
-        h1{color : white;background-color : #0086b2;}
-        h3{color : white;background-color : #0086b2;}
-        body{font-family : sans-serif,Arial,Tahoma;
-              color : black;background-color : white;}
-        b{color : white;background-color : #0086b2;}
-        a{color : black;} HR{color : #0086b2;}
+        h1 {color: white;background-color: #0086b2;}
+        h3 {color: white;background-color: #0086b2;}
+        body {font-family: sans-serif,Arial,Tahoma; color: black;background-color: white;}
+        b {color: white; background-color: #0086b2;}
+        a {color: black;} 
+        HR {color: #0086b2;}
       </style>
     </head>
     <body>
-      <h1>Directory Listing For
+      <h1>Directory Listing For 
+        <i>
             <xsl:value-of select="@directory"/>
+        </i>
       </h1>
       <hr size="1" />
-      <table cellspacing="0"
-                  width="100%"
-            cellpadding="5"
-                  align="center">
+      <table cellspacing="0" width="100%" cellpadding="5" align="center">
         <tr>
           <th align="left">Filename</th>
           <th align="right">Size</th>
@@ -43,7 +41,6 @@
     </body>
     </html>
   </xsl:template>
-
 
   <xsl:template match="entries">
     <tr>

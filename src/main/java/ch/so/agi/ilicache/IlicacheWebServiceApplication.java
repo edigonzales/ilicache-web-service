@@ -5,7 +5,6 @@ import java.io.InputStream;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.nio.file.StandardCopyOption;
-import java.util.List;
 
 import org.apache.cayenne.ObjectContext;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -13,17 +12,15 @@ import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.Bean;
-import org.springframework.context.annotation.Configuration;
 import org.springframework.core.io.ClassPathResource;
 
 import ch.so.agi.ilicache.cayenne.Clonerepository;
 import ch.so.agi.ilicache.cayenne.Peerrepository;
+import ch.so.agi.ilicache.config.UserConfig;
+import ch.so.agi.ilicache.service.CloneService;
 
 @SpringBootApplication
-public class IlicacheWebServiceApplication {
-    @Autowired
-    AppProperties appProperties;
-    
+public class IlicacheWebServiceApplication {    
     @Autowired
     UserConfig userConfig;
 
@@ -34,19 +31,16 @@ public class IlicacheWebServiceApplication {
     CloneService cloneService;
 
 	public static void main(String[] args) {
-	    System.out.println("gaga");
 		SpringApplication.run(IlicacheWebServiceApplication.class, args);
 	}
-
+	
     @Bean
     public CommandLineRunner init() {
         return args -> {
             //TODO: Immer überschreiben?
-            File dbFile = Paths.get(appProperties.getIlicachedb()+".mv.db").toFile();
+            File dbFile = Paths.get(userConfig.getIlicachedb()+".mv.db").toFile();
             InputStream resource = new ClassPathResource("ilicachedb.mv.db").getInputStream();
             Files.copy(resource, dbFile.toPath(), StandardCopyOption.REPLACE_EXISTING);
-
-            System.out.println("fubar");
 
             String cloneRepositories = userConfig.getCloneRepositories();
             //List<String> cloneRepositories = userProperties.getCloneRepositories();
@@ -57,6 +51,9 @@ public class IlicacheWebServiceApplication {
                 objectContext.commitChanges();
             }
             
+            // Peer Repositories funktionieren mit ilitools irgendwie nicht.
+            // https://github.com/claeis/ili2c/issues/63
+            // Als subsidiarySite?
 //            List<String> peerRepositories = userProperties.getPeerRepositories();
 //            for (String repository : peerRepositories) {
 //                Peerrepository peerRepository = objectContext.newObject(Peerrepository.class);

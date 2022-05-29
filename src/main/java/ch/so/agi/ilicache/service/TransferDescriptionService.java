@@ -1,4 +1,4 @@
-package ch.so.agi.ilicache;
+package ch.so.agi.ilicache.service;
 
 import java.io.File;
 import java.io.IOException;

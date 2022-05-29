@@ -9,19 +9,30 @@ import org.springframework.boot.web.embedded.tomcat.TomcatServletWebServerFactor
 import org.springframework.boot.web.server.WebServerFactoryCustomizer;
 import org.springframework.stereotype.Component;
 
+import ch.so.agi.ilicache.config.UserConfig;
+
 @Component
 public class MyTomcatWebServerCustomizer implements WebServerFactoryCustomizer<TomcatServletWebServerFactory>  {
     
     @Autowired
-    UserConfig userProperties;
+    UserConfig userConfig;
     
+    @Value("${app.liveRepoCloneDirectoryName}")
+    private String liveRepoCloneDirectoryName;
+
+    /*
+     * Achtung: Low level Tomcat Konfiguration, damit das Directory-Listing
+     * verwendet werden kann. 
+     * Andere statische (Spring Boot) Ressourcen funktionieren immer
+     * noch (z.B. "src/main/resources/static").
+     */
     @Override
     public void customize(TomcatServletWebServerFactory factory) {
         TomcatContextCustomizer tomcatContextCustomizer = new TomcatContextCustomizer() {
             @Override
             public void customize(Context context) {
-                String childFolder = "clone";
-                context.setDocBase(userProperties.getCloneDirectory());                
+                String childFolder = liveRepoCloneDirectoryName;
+                context.setDocBase(userConfig.getCloneDirectory());                
                 Wrapper defServlet = (Wrapper) context.findChild("default");
                 defServlet.addInitParameter("listings", "true");
                 defServlet.addInitParameter("sortListings", "true");

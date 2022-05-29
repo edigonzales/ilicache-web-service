@@ -1,4 +1,4 @@
-package ch.so.agi.ilicache;
+package ch.so.agi.ilicache.service;
 
 import org.apache.cayenne.ObjectContext;
 import org.apache.cayenne.query.ObjectSelect;
@@ -7,6 +7,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.scheduling.annotation.EnableScheduling;
 import org.springframework.scheduling.annotation.Scheduled;
@@ -24,8 +25,9 @@ import ch.interlis.iom_j.Iom_jObject;
 import ch.interlis.iom_j.xtf.XtfWriter;
 import ch.interlis.iox.IoxException;
 import ch.interlis.iox.IoxWriter;
-import ch.so.agi.ilicache.UserConfig.IliSite;
 import ch.so.agi.ilicache.cayenne.Clonerepository;
+import ch.so.agi.ilicache.config.UserConfig;
+import ch.so.agi.ilicache.config.UserConfig.IliSite;
 
 import java.io.File;
 import java.io.IOException;
@@ -52,7 +54,21 @@ public class CloneService {
     @Autowired
     @Qualifier("ilisite")
     TransferDescription tdIliSite;
+    
+    @Value("${app.stageRepoCloneDirectoryName}")
+    private String stageRepoCloneDirectoryName;
+
+    @Value("${app.liveRepoCloneDirectoryName}")
+    private String liveRepoCloneDirectoryName;
             
+//    public CloneService() {
+//        super();
+//        throw new NullPointerException();
+//    }
+    
+    // TODO: check cron syntax. where? Oder was passiert? Kann man mit der Exception was anfangen?
+    // Siehe Konstruktor. Aber wie transportiert man das dem Benutzer sinnvoll? 
+    // Ah -> das wäre was für einen Health Endpoint.
     @Scheduled(cron = "${user.cloneCronExpression}")
     public void cloneRepositories() {
         log.info("cloning repositories");
@@ -69,7 +85,7 @@ public class CloneService {
         log.debug("rootCloneDirectory: " + rootCloneDirectory);
 
         String stageRepoCloneDirectory = Paths.get(rootCloneDirectory, "stage", repository.getAname()).toFile().getAbsolutePath();
-        String liveRepoCloneDirectory = Paths.get(rootCloneDirectory, "clone", repository.getAname()).toFile().getAbsolutePath();
+        String liveRepoCloneDirectory = Paths.get(rootCloneDirectory, liveRepoCloneDirectoryName, repository.getAname()).toFile().getAbsolutePath();
                   
         LocalDateTime now = LocalDateTime.now();
         
@@ -106,7 +122,7 @@ public class CloneService {
                 ioxWriter.write(new ch.interlis.iox_j.StartBasketEvent(ILI_TOPIC,BID));
 
                 Iom_jObject iomRootObj = new Iom_jObject(ILI_TOPIC+".Site", String.valueOf(1));
-                String repoName = "Clone of " + repository.getUrl();
+                String repoName = "Mirror of " + repository.getUrl();
                 if (repoName.length() >= 50) repoName = repoName.substring(0, 50);
                 iomRootObj.setattrvalue("Name", repoName);
 

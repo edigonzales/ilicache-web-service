@@ -1,4 +1,4 @@
-package ch.so.agi.ilicache;
+package ch.so.agi.ilicache.config;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -9,6 +9,7 @@ import org.springframework.stereotype.Component;
 @Component
 @ConfigurationProperties("user")
 public class UserConfig {
+    private String ilicachedb;
     private IliSite iliSite;
     private String cloneDirectory;
     private String cloneCronExpression;
@@ -16,6 +17,14 @@ public class UserConfig {
     private String cloneRepositories;    
     private String peerRepositories;
     
+    public String getIlicachedb() {
+        return ilicachedb;
+    }
+
+    public void setIlicachedb(String ilicachedb) {
+        this.ilicachedb = ilicachedb;
+    }
+
     public IliSite getIliSite() {
         return iliSite;
     }

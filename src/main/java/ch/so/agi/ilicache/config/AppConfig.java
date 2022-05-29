@@ -1,4 +1,4 @@
-package ch.so.agi.ilicache;
+package ch.so.agi.ilicache.config;
 
 import java.io.File;
 
@@ -20,10 +20,7 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 @Configuration
 public class AppConfig implements WebMvcConfigurer {
     @Autowired
-    UserConfig userProperties;
-        
-    @Autowired
-    AppProperties appProperties;
+    UserConfig userConfig;
 
     ServerRuntime cayenneRuntime;
     
@@ -35,7 +32,7 @@ public class AppConfig implements WebMvcConfigurer {
     @Bean
     public ObjectContext objectContext() {
         cayenneRuntime = ServerRuntime.builder()
-                .url("jdbc:h2:"+new File(appProperties.getIlicachedb()).getAbsolutePath())
+                .url("jdbc:h2:"+new File(userConfig.getIlicachedb()).getAbsolutePath())
                 .jdbcDriver("org.h2.Driver")
                 .addConfig("cayenne/cayenne-project.xml")
                 .build();
@@ -50,6 +47,7 @@ public class AppConfig implements WebMvcConfigurer {
         cayenneRuntime.shutdown();
     }
    
+    // WARUM????
     // Directory listing funktioniert so nicht. Ist es überhaupt notwendig?
     // Umweg via MyTomcatWebServerCustomizer
 //    @Override 

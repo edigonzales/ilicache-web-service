@@ -6,10 +6,12 @@ logging.level.org.apache.cayenne.log.JdbcEventLogger: ${CAYENNE_LOGLEVEL:DEBUG}
 server.servlet.register-default-servlet: true
 
 app:
-    myVar: ${VAR:defaultValue}
-    ilicachedb: ${ILICACHEDB:/Users/stefan/tmp/ilicache/ilicachedb} #/tmp/
+    myVar: ${VAR:defaultValue}  
+    liveRepoCloneDirectoryName: live
+    stageRepoCloneDirectoryName: stage
 
 user:
+  ilicachedb: ${ILICACHEDB:/Users/stefan/tmp/ilicache/ilicachedb} #/tmp/
   iliSite:
     name: ${ILISITE_NAME:interlis-model-repositories-mirror}
     title: ${ILISITE_TITLE:INTERLIS model repositories mirror}
@@ -18,7 +20,7 @@ user:
     technicalContact: ${ILISITE_TECHNICAL_CONTACT:mailto:agi@bd.so.ch} 
     furtherInformation: ${ILISITE_FURTHER_INFORMATION:}
   cloneDirectory: ${CLONE_DIRECTORY:/Users/stefan/tmp/ilicache/}
-  cloneCronExpression: ${CLONE_CRON_EXPRESSION:0 0/2 * * * ?} #"0 0 2 * * ?"
+  cloneCronExpression: ${CLONE_CRON_EXPRESSION:0 0/2 * * * ?} #"0 0 2 * * ?" TODO: check syntax
   cloneOnStartup: ${CLONE_ON_STARTUP:false}
   cloneRepositories: ${CLONE_REPOSITORIES:http://models.interlis.ch}
   #peerRepositories: ${PEER_REPOSITORIES:http://models.interlis.ch}
