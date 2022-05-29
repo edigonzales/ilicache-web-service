@@ -16,8 +16,8 @@ user:
     name: ${ILISITE_NAME:interlis-model-repositories-mirror}
     title: ${ILISITE_TITLE:INTERLIS model repositories mirror}
     shortDescription: ${ILISITE_SHORT_DESCRIPTION:A mirror of INTERLIS model repositories}
-    owner: ${ILISITE_OWNER:https://geo.so.ch}
-    technicalContact: ${ILISITE_TECHNICAL_CONTACT:mailto:agi@bd.so.ch} 
+    owner: ${ILISITE_OWNER:https://www.example.com}
+    technicalContact: ${ILISITE_TECHNICAL_CONTACT:mailto:admin@example.com} 
     furtherInformation: ${ILISITE_FURTHER_INFORMATION:}
   cloneDirectory: ${CLONE_DIRECTORY:/Users/stefan/tmp/ilicache/}
   cloneCronExpression: ${CLONE_CRON_EXPRESSION:0 0/2 * * * ?} #"0 0 2 * * ?" TODO: check syntax
