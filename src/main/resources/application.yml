@@ -10,11 +10,13 @@ management:
     health:
       show-details: always
 
+# aka internal
 app:
     myVar: ${VAR:defaultValue}  
     liveRepoCloneDirectoryName: live
     stageRepoCloneDirectoryName: stage
 
+#aka external
 user:
   ilicachedb: ${ILICACHEDB:/Users/stefan/tmp/ilicache/ilicachedb} #/tmp/
   iliSite:
