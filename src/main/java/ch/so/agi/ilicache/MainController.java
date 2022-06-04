@@ -5,31 +5,22 @@ import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.sql.SQLException;
-import java.time.format.DateTimeFormatter;
-import java.util.ArrayList;
-import java.util.HashMap;
 
-
-import org.apache.cayenne.ObjectContext;
-import org.apache.cayenne.query.ObjectSelect;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.InputStreamResource;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RestController;
 import ch.interlis.iox.IoxException;
-import ch.so.agi.ilicache.cayenne.Clonerepository;
 import ch.so.agi.ilicache.config.UserConfig;
 import ch.so.agi.ilicache.service.IlisiteService;
 
 @RestController
 public class MainController {
     private final Logger log = LoggerFactory.getLogger(this.getClass());
-
-    @Autowired
-    ObjectContext objectContext;
 
     @Autowired
     UserConfig userConfig;
@@ -46,13 +37,11 @@ public class MainController {
 
     @GetMapping("/ping")
     public ResponseEntity<?> ping()  {
-        //return new ResponseEntity<String>("ilicache-web-service", HttpStatus.OK);
-        return ResponseEntity.ok().body(userConfig);
+        return new ResponseEntity<String>("ilicache-web-service", HttpStatus.OK);
     }
     
     @GetMapping("/config")
     public ResponseEntity<?> properties()  {
-        System.out.println("hallo welt.");
         return ResponseEntity.ok().body(userConfig);
     }
     
@@ -74,17 +63,17 @@ public class MainController {
     
     @GetMapping("/status")
     public ResponseEntity<?> status() throws SQLException {
-        var cloneRepositories = ObjectSelect.query(Clonerepository.class).select(objectContext);        
-        var cloneReposList = new ArrayList<HashMap<String,String>>();
-        for (var cloneRepo : cloneRepositories) {
-            var cloneRepoMap = new HashMap<String,String>();
-            cloneRepoMap.put("name", cloneRepo.getAname());
-            cloneRepoMap.put("url", cloneRepo.getUrl());
-            if (cloneRepo.getLastrun()!=null) cloneRepoMap.put("lastRun", cloneRepo.getLastrun().format(DateTimeFormatter.ISO_LOCAL_DATE_TIME));
-            if (cloneRepo.getLastsuccessfulrun()!=null) cloneRepoMap.put("lastSuccessfulRun", cloneRepo.getLastsuccessfulrun().format(DateTimeFormatter.ISO_LOCAL_DATE_TIME));
-            cloneReposList.add(cloneRepoMap);
-        }
+//        var cloneRepositories = ObjectSelect.query(Clonerepository.class).select(objectContext);        
+//        var cloneReposList = new ArrayList<HashMap<String,String>>();
+//        for (var cloneRepo : cloneRepositories) {
+//            var cloneRepoMap = new HashMap<String,String>();
+//            cloneRepoMap.put("name", cloneRepo.getAname());
+//            cloneRepoMap.put("url", cloneRepo.getUrl());
+//            if (cloneRepo.getLastrun()!=null) cloneRepoMap.put("lastRun", cloneRepo.getLastrun().format(DateTimeFormatter.ISO_LOCAL_DATE_TIME));
+//            if (cloneRepo.getLastsuccessfulrun()!=null) cloneRepoMap.put("lastSuccessfulRun", cloneRepo.getLastsuccessfulrun().format(DateTimeFormatter.ISO_LOCAL_DATE_TIME));
+//            cloneReposList.add(cloneRepoMap);
+//        }
         
-        return ResponseEntity.ok().body(cloneReposList);
+        return ResponseEntity.ok().body("foo");
     } 
 }

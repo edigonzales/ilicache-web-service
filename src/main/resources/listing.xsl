@@ -33,23 +33,24 @@
           <th align="right">Size</th>
           <th align="right">Last Modified</th>
         </tr>
-        <xsl:apply-templates select="entries"/>
-        </table>
+		  <xsl:template match="entries">
+		    <tr>
+		      <td align="left">
+		        <xsl:variable name="urlPath" select="@urlPath"/>
+		        <a href="..">..</a>
+		      </td>
+		    </tr>
+		  </xsl:template>
+
+        <xsl:apply-templates select="entries/entry">
+            <xsl:sort select="@urlPath"/>
+        </xsl:apply-templates>
+      </table>
       <xsl:apply-templates select="readme"/>
       <hr size="1" />
       <h3>Apache Tomcat/9.0</h3>
     </body>
     </html>
-  </xsl:template>
-
-  <xsl:template match="entries">
-    <tr>
-      <td align="left">
-        <xsl:variable name="urlPath" select="@urlPath"/>
-        <a href="..">..</a>
-      </td>
-    </tr>
-    <xsl:apply-templates select="entry"/>
   </xsl:template>
 
   <xsl:template match="readme">

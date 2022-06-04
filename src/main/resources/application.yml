@@ -1,5 +1,4 @@
 logging.level.root: ${ROOT_LOGLEVEL:INFO}
-logging.level.org.apache.cayenne.log.JdbcEventLogger: ${CAYENNE_LOGLEVEL:DEBUG}
 
 # https://github.com/spring-projects/spring-boot/wiki/Spring-Boot-2.4-Release-Notes#default-servlet-registration
 # https://stackoverflow.com/questions/64822250/illegalstateexception-after-upgrading-web-app-to-spring-boot-2-4
@@ -13,12 +12,11 @@ management:
 # aka internal
 app:
     myVar: ${VAR:defaultValue}  
-    liveRepoCloneDirectoryName: live
+    liveRepoCloneDirectoryName: mirror
     stageRepoCloneDirectoryName: stage
 
 #aka external
 user:
-  ilicachedb: ${ILICACHEDB:/Users/stefan/tmp/ilicache/ilicachedb} #/tmp/
   iliSite:
     name: ${ILISITE_NAME:interlis-model-repositories-mirror}
     title: ${ILISITE_TITLE:INTERLIS model repositories mirror}
@@ -27,8 +25,8 @@ user:
     technicalContact: ${ILISITE_TECHNICAL_CONTACT:mailto:admin@example.com} 
     furtherInformation: ${ILISITE_FURTHER_INFORMATION:}
   cloneDirectory: ${CLONE_DIRECTORY:/Users/stefan/tmp/ilicache/}
-  cloneCronExpression: ${CLONE_CRON_EXPRESSION:0 0/2 * * * ?} #"0 0 2 * * ?" TODO: check syntax
+  cloneCronExpression: ${CLONE_CRON_EXPRESSION:0 0/2 * * * ?} #"0 0 2 * * ?"
   cloneOnStartup: ${CLONE_ON_STARTUP:false}
-  cloneRepositories: ${CLONE_REPOSITORIES:http://models.interlis.ch}
+  cloneRepositories: ${CLONE_REPOSITORIES:http://models.interlis.ch,https://models.kgk-cgc.ch/}
   #peerRepositories: ${PEER_REPOSITORIES:http://models.interlis.ch}
    

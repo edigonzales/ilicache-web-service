@@ -7,8 +7,6 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.List;
 
-import org.apache.cayenne.ObjectContext;
-import org.apache.cayenne.query.ObjectSelect;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -23,8 +21,6 @@ import ch.interlis.iom_j.Iom_jObject;
 import ch.interlis.iom_j.xtf.XtfWriter;
 import ch.interlis.iox.IoxException;
 import ch.interlis.iox.IoxWriter;
-import ch.so.agi.ilicache.cayenne.Clonerepository;
-import ch.so.agi.ilicache.cayenne.Peerrepository;
 import ch.so.agi.ilicache.config.UserConfig;
 import ch.so.agi.ilicache.config.UserConfig.IliSite;
 
@@ -39,12 +35,14 @@ public class IlisiteService {
     @Qualifier("ilisite")
     TransferDescription tdIliSite;
     
-    @Autowired
-    ObjectContext objectContext;
+//    @Autowired
+//    ObjectContext objectContext;
 
     @Value("${app.liveRepoCloneDirectoryName}")
     private String liveRepoCloneDirectoryName;
 
+    // TODO: Braucht es nur noch, wenn man weitere Repos verknüpfen will.
+    // Z.B. das eigene, das nicht gecloned werden soll (da schnelllebiger).
     public File createIlisiteXml() {
         String ILI_TOPIC="IliSite09.SiteMetadata";
         String BID="IliSite09.SiteMetadata";
@@ -70,24 +68,27 @@ public class IlisiteService {
             // TODO: Bedingung stimmt nicht. Wenn wir restarten, kann der Clone ja weg sein aber trotzdem
             // ein Datum vorhanden sein. Am ehesten gilt (zusätzlich) die Bedingung, dass das Verzeichnis 
             // nicht leer sein darf. D.h. z.B. ilisite.xml und ilimodels.xml
-            List<Clonerepository> cloneRepositories = ObjectSelect.query(Clonerepository.class).where(Clonerepository.LASTSUCCESSFULRUN.isNotNull()).select(objectContext);
-            for (Clonerepository repository : cloneRepositories) {
+            
+            // TODO: nur noch "live"
+            
+            String cloneRepositories = userConfig.getCloneRepositories();
+            for (String repository : cloneRepositories.split(",")) {
                 Iom_jObject cloneSite = new Iom_jObject("IliSite09.RepositoryLocation_", null);
-                String repositoryName = repository.getUrl().substring(repository.getUrl().indexOf("/")+2);
+                String repositoryName = repository.substring(repository.indexOf("/")+2);
                 String value = ServletUriComponentsBuilder.fromCurrentContextPath().pathSegment(liveRepoCloneDirectoryName).pathSegment(repositoryName).build().toUriString();
                 cloneSite.setattrvalue("value",  value);
                 iomRootObj.addattrobj("subsidiarySite", cloneSite);
             }
             
             // TODO eventuell parentSite bei uns löschen? Damit wird sicher nicht in den anderen gesucht.
-            List<Peerrepository> peerRepositories = ObjectSelect.query(Peerrepository.class).select(objectContext);
-            for (Peerrepository repository : peerRepositories) {
-                Iom_jObject peerSite = new Iom_jObject("IliSite09.RepositoryLocation_", null);
-                peerSite.setattrvalue("value",  repository.getUrl());
-                // TODO peerSite scheint nicht zu funktionieren.
-                // https://github.com/claeis/ili2c/issues/63
-                iomRootObj.addattrobj("subsidiarySite", peerSite);
-            }
+//            List<Peerrepository> peerRepositories = ObjectSelect.query(Peerrepository.class).select(objectContext);
+//            for (Peerrepository repository : peerRepositories) {
+//                Iom_jObject peerSite = new Iom_jObject("IliSite09.RepositoryLocation_", null);
+//                peerSite.setattrvalue("value",  repository.getUrl());
+//                // TODO peerSite scheint nicht zu funktionieren.
+//                // https://github.com/claeis/ili2c/issues/63
+//                iomRootObj.addattrobj("subsidiarySite", peerSite);
+//            }
             
             ioxWriter.write(new ch.interlis.iox_j.ObjectEvent(iomRootObj));   
 

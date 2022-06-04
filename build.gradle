@@ -43,9 +43,9 @@ dependencies {
 
     implementation 'commons-io:commons-io:2.11.0'
 
-    implementation 'org.apache.cayenne:cayenne-server:4.1.1'
-    implementation 'com.h2database:h2:1.4.197'
-    implementation 'org.orbisgis:h2gis:1.5.0'
+//    implementation 'org.apache.cayenne:cayenne-server:4.1.1'
+//    implementation 'com.h2database:h2:1.4.197'
+//    implementation 'org.orbisgis:h2gis:1.5.0'
 
     developmentOnly 'org.springframework.boot:spring-boot-devtools'
     testImplementation 'org.springframework.boot:spring-boot-starter-test'
@@ -58,55 +58,4 @@ test {
 bootBuildImage {
     builder = 'paketobuildpacks/builder:tiny'
     //environment = ['BP_NATIVE_IMAGE': 'true']
-}
-
-cayenne.defaultDataMap "$projectDir/src/main/resources/cayenne/datamap.map.xml"
-
-cgen {
-    client = false
-    mode = 'entity'
-    overwrite = true
-    //createPKProperties = true
-}
-
-cdbimport {
-    map "$projectDir/src/main/resources/cayenne/datamap.map.xml"
-    
-    cayenneProject "$projectDir/src/main/resources/cayenne/cayenne-project.xml"
-    
-    dataSource {
-        driver 'org.h2.Driver'
-        //url 'jdbc:h2:/Users/stefan/sources/ilicache-web-service/src/main/interlis/ilicache.mv.db'
-        url "jdbc:h2:${projectDir}/src/main/interlis/ilicachedb"
-        username ''
-        password ''
-    }
-
-    dbImport {
-        usePrimitives false
-        defaultPackage 'ch.so.agi.ilicache.cayenne'
-        schema {
-            name 'PUBLIC'
-            includeTable 'CLONEREPOSITORY'
-            includeTable 'PEERREPOSITORY'
-        }
-    }
-}
-
-
-cdbimport.finalizedBy('updateDatamap')
-
-task updateDatamap() {
-    description = "Change PK creation strategy"
-    doLast {
-        ant.replace(
-        file: file(Paths.get("$rootDir","src","main","resources","cayenne","datamap.map.xml")),
-        token: 'isPrimaryKey=\"true\"',
-        value: 'isPrimaryKey=\"true\" isGenerated=\"true\"',
-        encoding: 'UTF-8')
-    }
-}
-
-task deleteCayenneConfig(type: Delete) {
-    delete file(Paths.get("$rootDir","src","main","resources","cayenne","datamap.map.xml")), file(Paths.get("$rootDir","src","main","resources","cayenne","cayenne-project.xml"))
 }

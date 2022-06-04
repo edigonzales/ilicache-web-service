@@ -1,7 +1,5 @@
 package ch.so.agi.ilicache.service;
 
-import org.apache.cayenne.ObjectContext;
-import org.apache.cayenne.query.ObjectSelect;
 import org.apache.commons.io.FileUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -25,12 +23,13 @@ import ch.interlis.iom_j.Iom_jObject;
 import ch.interlis.iom_j.xtf.XtfWriter;
 import ch.interlis.iox.IoxException;
 import ch.interlis.iox.IoxWriter;
-import ch.so.agi.ilicache.cayenne.Clonerepository;
 import ch.so.agi.ilicache.config.UserConfig;
 import ch.so.agi.ilicache.config.UserConfig.IliSite;
 
 import java.io.File;
 import java.io.IOException;
+import java.net.URI;
+import java.net.URISyntaxException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
@@ -46,10 +45,10 @@ public class CloneService {
     private final Logger log = LoggerFactory.getLogger(this.getClass());
 
     @Autowired
-    UserConfig userProperties;
+    UserConfig userConfig;
     
-    @Autowired
-    ObjectContext objectContext;
+//    @Autowired
+//    ObjectContext objectContext;
     
     @Autowired
     @Qualifier("ilisite")
@@ -72,30 +71,40 @@ public class CloneService {
     @Scheduled(cron = "${user.cloneCronExpression}")
     public void cloneRepositories() {
         log.info("cloning repositories");
-        List<Clonerepository> cloneRepositories = ObjectSelect.query(Clonerepository.class).select(objectContext);
-        for (Clonerepository repository : cloneRepositories) {
-            cloneRepository(repository);
-        }
+        String cloneRepositories = userConfig.getCloneRepositories();
+//        for (String repository : cloneRepositories.split(",")) {
+//            cloneRepository(repository);
+//        }
+        cloneRepository(cloneRepositories);
     }
     
-    private void cloneRepository(Clonerepository repository) {
-        log.debug("cloning: " + repository.getUrl());
-        
-        String rootCloneDirectory = userProperties.getCloneDirectory();
-        log.debug("rootCloneDirectory: " + rootCloneDirectory);
-
-        String stageRepoCloneDirectory = Paths.get(rootCloneDirectory, "stage", repository.getAname()).toFile().getAbsolutePath();
-        String liveRepoCloneDirectory = Paths.get(rootCloneDirectory, liveRepoCloneDirectoryName, repository.getAname()).toFile().getAbsolutePath();
-                  
-        LocalDateTime now = LocalDateTime.now();
+    // TODO: names (methode und parameter)
+    private void cloneRepository(String repositoryUrl) {
+        log.debug("cloning: " + repositoryUrl);
         
         try {
+//            URI uri = new URI(repositoryUrl);
+//            String repository = uri.getPath();
+//            if (repository.endsWith("/")) {
+//                repository = repository.substring(0, repository.length()-1);
+//            }
+            
+            String rootCloneDirectory = userConfig.getCloneDirectory();
+            log.debug("rootCloneDirectory: " + rootCloneDirectory);
+    
+            String stageRepoCloneDirectory = Paths.get(rootCloneDirectory, stageRepoCloneDirectoryName, "fubar").toFile().getAbsolutePath();
+            String liveRepoCloneDirectory = Paths.get(rootCloneDirectory, liveRepoCloneDirectoryName, "fubar").toFile().getAbsolutePath();
+                      
+            LocalDateTime now = LocalDateTime.now();
+
             FileUtils.deleteDirectory(new File(stageRepoCloneDirectory));
             
             UserSettings settings = new UserSettings();
-            Configuration config = new Configuration();        
-            FileEntry file = new FileEntry(repository.getUrl(), FileEntryKind.ILIMODELFILE);
-            config.addFileEntry(file);
+            Configuration config = new Configuration();    
+            for (String repository : repositoryUrl.split(",")) {
+                FileEntry file = new FileEntry(repository, FileEntryKind.ILIMODELFILE);
+                config.addFileEntry(file);
+            }
             // CloneRepos-Klasse erstellt Verzeichnis, falls es nicht vorhanden ist.
             config.setOutputFile(new File(stageRepoCloneDirectory).getAbsolutePath());
             boolean failed = new CloneRepos().cloneRepos(config, settings);
@@ -107,7 +116,7 @@ public class CloneService {
                 } else {
                     boolean created = new File(liveRepoCloneDirectory).mkdirs();
                     if (!created) {
-                        throw new IOException("could not create live directory for model " + repository.getUrl());
+                        throw new IOException("could not create live directory for model " + repositoryUrl);
                     }
                 }
                 
@@ -122,10 +131,12 @@ public class CloneService {
                 ioxWriter.write(new ch.interlis.iox_j.StartBasketEvent(ILI_TOPIC,BID));
 
                 Iom_jObject iomRootObj = new Iom_jObject(ILI_TOPIC+".Site", String.valueOf(1));
-                String repoName = "Mirror of " + repository.getUrl();
+                String repoName = "Mirror of " + repositoryUrl;
                 if (repoName.length() >= 50) repoName = repoName.substring(0, 50);
                 iomRootObj.setattrvalue("Name", repoName);
 
+                // TODO: use shortDescription for listing all clone repos
+                
                 ioxWriter.write(new ch.interlis.iox_j.ObjectEvent(iomRootObj));   
 
                 ioxWriter.write(new ch.interlis.iox_j.EndBasketEvent());
@@ -136,7 +147,8 @@ public class CloneService {
                 log.debug("copying from stage to live");
                 FileUtils.copyDirectory(new File(stageRepoCloneDirectory), new File(liveRepoCloneDirectory));
                 
-                repository.setLastsuccessfulrun(now);
+                // TODO: In ein (Memory)-Object schreiben
+//                repository.setLastsuccessfulrun(now);
             }            
         } catch (IOException e) {
             e.printStackTrace();
@@ -144,9 +156,13 @@ public class CloneService {
         } catch (IoxException e) {
             e.printStackTrace();
             log.error(e.getMessage());
+//        } catch (URISyntaxException e) {
+//            e.printStackTrace();
+//            log.error(e.getMessage());
         } finally {
-            repository.setLastrun(now);
-            objectContext.commitChanges();
+            // TODO: In ein (Memory)-Object schreiben
+//            repository.setLastrun(now);
+//            objectContext.commitChanges();
         }
     }
 }

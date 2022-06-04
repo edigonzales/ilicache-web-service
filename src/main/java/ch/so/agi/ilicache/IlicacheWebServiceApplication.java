@@ -6,7 +6,6 @@ import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.nio.file.StandardCopyOption;
 
-import org.apache.cayenne.ObjectContext;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
@@ -14,8 +13,6 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.Bean;
 import org.springframework.core.io.ClassPathResource;
 
-import ch.so.agi.ilicache.cayenne.Clonerepository;
-import ch.so.agi.ilicache.cayenne.Peerrepository;
 import ch.so.agi.ilicache.config.UserConfig;
 import ch.so.agi.ilicache.service.CloneService;
 
@@ -23,9 +20,6 @@ import ch.so.agi.ilicache.service.CloneService;
 public class IlicacheWebServiceApplication {    
     @Autowired
     UserConfig userConfig;
-
-    @Autowired
-    ObjectContext objectContext;
     
     @Autowired 
     CloneService cloneService;
@@ -41,12 +35,12 @@ public class IlicacheWebServiceApplication {
             // in das definierte Verzeichnis kopiert.
             
             String cloneRepositories = userConfig.getCloneRepositories();
-            for (String repository : cloneRepositories.split(",")) {
-                Clonerepository cloneRepository = objectContext.newObject(Clonerepository.class);
-                cloneRepository.setUrl(repository);
-                cloneRepository.setAname(repository.substring(repository.indexOf("/")+2));
-                objectContext.commitChanges();
-            }
+//            for (String repository : cloneRepositories.split(",")) {
+//                Clonerepository cloneRepository = objectContext.newObject(Clonerepository.class);
+//                cloneRepository.setUrl(repository);
+//                cloneRepository.setAname(repository.substring(repository.indexOf("/")+2));
+//                objectContext.commitChanges();
+//            }
             
             // Peer Repositories funktionieren mit ilitools irgendwie nicht.
             // https://github.com/claeis/ili2c/issues/63
