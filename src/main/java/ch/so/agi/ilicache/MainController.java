@@ -4,6 +4,7 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.sql.SQLException;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -72,7 +73,7 @@ public class MainController {
     }
     
     @GetMapping("/status")
-    public ResponseEntity<?> status() {
+    public ResponseEntity<?> status() throws SQLException {
         var cloneRepositories = ObjectSelect.query(Clonerepository.class).select(objectContext);        
         var cloneReposList = new ArrayList<HashMap<String,String>>();
         for (var cloneRepo : cloneRepositories) {

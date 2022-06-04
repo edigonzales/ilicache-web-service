@@ -37,13 +37,10 @@ public class IlicacheWebServiceApplication {
     @Bean
     public CommandLineRunner init() {
         return args -> {
-            //TODO: Immer überschreiben?
-            File dbFile = Paths.get(userConfig.getIlicachedb()+".mv.db").toFile();
-            InputStream resource = new ClassPathResource("ilicachedb.mv.db").getInputStream();
-            Files.copy(resource, dbFile.toPath(), StandardCopyOption.REPLACE_EXISTING);
-
+            // Datenbank wird in AppConfig beim Erstellen des ObjectContexts
+            // in das definierte Verzeichnis kopiert.
+            
             String cloneRepositories = userConfig.getCloneRepositories();
-            //List<String> cloneRepositories = userProperties.getCloneRepositories();
             for (String repository : cloneRepositories.split(",")) {
                 Clonerepository cloneRepository = objectContext.newObject(Clonerepository.class);
                 cloneRepository.setUrl(repository);
