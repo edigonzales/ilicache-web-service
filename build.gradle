@@ -1,38 +1,37 @@
 plugins {
-    id 'org.springframework.boot' version '2.6.7'
+    id 'org.springframework.boot' version '2.7.0'
     id 'io.spring.dependency-management' version '1.0.11.RELEASE'
+    id 'org.springframework.experimental.aot' version '0.12.0'
     id 'java'
 }
 
 apply from: "$rootDir/gradle/versioning.gradle"
-apply plugin: 'org.apache.cayenne'
 
 group = 'ch.so.agi'
 
-sourceCompatibility = '11'
+sourceCompatibility = 11
+targetCompatibility = 11
+
+compileJava {
+    options.compilerArgs.addAll(['--release', '11'])
+}
 
 repositories {
     maven { url "https://jars.interlis.ch" }
     mavenCentral()
+    maven { url 'https://repo.spring.io/release' }
 }
 
 dependencies {
     implementation 'org.springframework.boot:spring-boot-starter-web'
     implementation 'org.springframework.boot:spring-boot-starter-actuator'
     developmentOnly 'org.springframework.boot:spring-boot-devtools'
-  
-    //implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
-    //runtimeOnly('com.h2database:h2')
-    
+      
     implementation 'ch.interlis:iox-ili:1.21.7' 
     implementation 'ch.interlis:ili2c-core:5.2.3'
     implementation 'ch.interlis:ili2c-tool:5.2.3'
 
     implementation 'commons-io:commons-io:2.11.0'
-
-//    implementation 'org.apache.cayenne:cayenne-server:4.1.1'
-//    implementation 'com.h2database:h2:1.4.197'
-//    implementation 'org.orbisgis:h2gis:1.5.0'
 
     developmentOnly 'org.springframework.boot:spring-boot-devtools'
     testImplementation 'org.springframework.boot:spring-boot-starter-test'
@@ -45,4 +44,21 @@ test {
 bootBuildImage {
     builder = 'paketobuildpacks/builder:tiny'
     //environment = ['BP_NATIVE_IMAGE': 'true']
+}
+
+import org.springframework.aot.gradle.dsl.AotMode
+
+springAot {
+    //mode = AotMode.NATIVE_AGENT
+    debugVerify = false
+    removeXmlSupport = false
+    removeSpelSupport = false
+    removeYamlSupport = false
+    removeJmxSupport = true
+    verify = true
+}
+
+nativeBuild {
+    verbose = true
+    fallback = false
 }

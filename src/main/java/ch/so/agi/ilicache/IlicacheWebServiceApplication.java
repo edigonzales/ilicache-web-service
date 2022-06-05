@@ -12,10 +12,25 @@ import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.Bean;
 import org.springframework.core.io.ClassPathResource;
+import org.springframework.nativex.hint.TypeAccess;
+import org.springframework.nativex.hint.TypeHint;
 
 import ch.so.agi.ilicache.config.UserConfig;
 import ch.so.agi.ilicache.service.CloneService;
 
+@TypeHint(types = org.apache.catalina.servlets.DefaultServlet.class, 
+                   access= {TypeAccess.DECLARED_METHODS, 
+                           TypeAccess.DECLARED_FIELDS, 
+                           TypeAccess.DECLARED_CONSTRUCTORS, 
+                           TypeAccess.PUBLIC_METHODS,
+                           TypeAccess.PUBLIC_FIELDS,
+                           TypeAccess.PUBLIC_CONSTRUCTORS,
+                           //TypeAccess.JNI,
+                           TypeAccess.QUERY_DECLARED_CONSTRUCTORS,
+                           TypeAccess.QUERY_DECLARED_METHODS,
+                           TypeAccess.QUERY_PUBLIC_CONSTRUCTORS,
+                           TypeAccess.QUERY_PUBLIC_METHODS}               
+    )
 @SpringBootApplication
 public class IlicacheWebServiceApplication {    
     @Autowired
@@ -28,31 +43,11 @@ public class IlicacheWebServiceApplication {
 		SpringApplication.run(IlicacheWebServiceApplication.class, args);
 	}
 	
+	// PostConstruct: Anwendung nicht "live live", d.h. nicht fertig hochgefahren und nicht erreichbar.
+	// CommandLineRunner: Anwendung live aber nicht ready.
     @Bean
     public CommandLineRunner init() {
-        return args -> {
-            // Datenbank wird in AppConfig beim Erstellen des ObjectContexts
-            // in das definierte Verzeichnis kopiert.
-            
-            String cloneRepositories = userConfig.getCloneRepositories();
-//            for (String repository : cloneRepositories.split(",")) {
-//                Clonerepository cloneRepository = objectContext.newObject(Clonerepository.class);
-//                cloneRepository.setUrl(repository);
-//                cloneRepository.setAname(repository.substring(repository.indexOf("/")+2));
-//                objectContext.commitChanges();
-//            }
-            
-            // Peer Repositories funktionieren mit ilitools irgendwie nicht.
-            // https://github.com/claeis/ili2c/issues/63
-            // Als subsidiarySite?
-//            List<String> peerRepositories = userProperties.getPeerRepositories();
-//            for (String repository : peerRepositories) {
-//                Peerrepository peerRepository = objectContext.newObject(Peerrepository.class);
-//                peerRepository.setUrl(repository);
-//                peerRepository.setAname(repository.substring(repository.indexOf("/")+2));
-//                objectContext.commitChanges();
-//            }
-            
+        return args -> {                        
             if (userConfig.isCloneOnStartup()) {
                 cloneService.cloneRepositories();
             } 
@@ -60,7 +55,7 @@ public class IlicacheWebServiceApplication {
             String LISTING_XSL = "listing.xsl";
             File listingXslFile = Paths.get(userConfig.getCloneDirectory(), LISTING_XSL).toFile();
             InputStream listingXslResource = new ClassPathResource(LISTING_XSL).getInputStream();
-            Files.copy(listingXslResource, listingXslFile.toPath(), StandardCopyOption.REPLACE_EXISTING);
+            Files.copy(listingXslResource, listingXslFile.toPath(), StandardCopyOption.REPLACE_EXISTING);            
         };
     }
 }

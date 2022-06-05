@@ -34,6 +34,7 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.time.LocalDateTime;
+import java.util.Arrays;
 import java.util.List;
 
 import javax.annotation.PostConstruct;
@@ -47,68 +48,57 @@ public class CloneService {
     @Autowired
     UserConfig userConfig;
     
-//    @Autowired
-//    ObjectContext objectContext;
-    
     @Autowired
     @Qualifier("ilisite")
     TransferDescription tdIliSite;
+    
+    @Autowired
+    InfoService infoService;
     
     @Value("${app.stageRepoCloneDirectoryName}")
     private String stageRepoCloneDirectoryName;
 
     @Value("${app.liveRepoCloneDirectoryName}")
     private String liveRepoCloneDirectoryName;
-            
-//    public CloneService() {
-//        super();
-//        throw new NullPointerException();
-//    }
-    
-    // TODO: check cron syntax. where? Oder was passiert? Kann man mit der Exception was anfangen?
-    // Siehe Konstruktor. Aber wie transportiert man das dem Benutzer sinnvoll? 
-    // Ah -> das wäre was für einen Health Endpoint.
+
+    // Anwendung startet nicht, falls CronExpression 
+    // syntaktisch falsch ist.
     @Scheduled(cron = "${user.cloneCronExpression}")
     public void cloneRepositories() {
         log.info("cloning repositories");
         String cloneRepositories = userConfig.getCloneRepositories();
-//        for (String repository : cloneRepositories.split(",")) {
-//            cloneRepository(repository);
-//        }
         cloneRepository(cloneRepositories);
     }
     
-    // TODO: names (methode und parameter)
-    private void cloneRepository(String repositoryUrl) {
-        log.debug("cloning: " + repositoryUrl);
+    private void cloneRepository(String repositories) {
+        log.debug("cloning: " + repositories);
         
-        try {
-//            URI uri = new URI(repositoryUrl);
-//            String repository = uri.getPath();
-//            if (repository.endsWith("/")) {
-//                repository = repository.substring(0, repository.length()-1);
-//            }
-            
+        LocalDateTime now = LocalDateTime.now();
+
+        try {            
             String rootCloneDirectory = userConfig.getCloneDirectory();
             log.debug("rootCloneDirectory: " + rootCloneDirectory);
     
-            String stageRepoCloneDirectory = Paths.get(rootCloneDirectory, stageRepoCloneDirectoryName, "fubar").toFile().getAbsolutePath();
-            String liveRepoCloneDirectory = Paths.get(rootCloneDirectory, liveRepoCloneDirectoryName, "fubar").toFile().getAbsolutePath();
-                      
-            LocalDateTime now = LocalDateTime.now();
+            String stageRepoCloneDirectory = Paths.get(rootCloneDirectory, stageRepoCloneDirectoryName).toFile().getAbsolutePath();
+            String liveRepoCloneDirectory = Paths.get(rootCloneDirectory, liveRepoCloneDirectoryName).toFile().getAbsolutePath();
 
             FileUtils.deleteDirectory(new File(stageRepoCloneDirectory));
             
             UserSettings settings = new UserSettings();
             Configuration config = new Configuration();    
-            for (String repository : repositoryUrl.split(",")) {
+            for (String repository : repositories.split(",")) {
                 FileEntry file = new FileEntry(repository, FileEntryKind.ILIMODELFILE);
                 config.addFileEntry(file);
             }
             // CloneRepos-Klasse erstellt Verzeichnis, falls es nicht vorhanden ist.
             config.setOutputFile(new File(stageRepoCloneDirectory).getAbsolutePath());
+            log.info("start cloning...");
+            long start = System.currentTimeMillis();
             boolean failed = new CloneRepos().cloneRepos(config, settings);
-            
+            log.info("cloning finished.");
+            long finish = System.currentTimeMillis();
+            infoService.setCloneTimeElapsedSeconds((finish - start) / 1000);
+
             if (!failed) {
                 if (new File(liveRepoCloneDirectory).exists()) {
                     log.debug("cleaning live directory: " + liveRepoCloneDirectory);
@@ -116,10 +106,11 @@ public class CloneService {
                 } else {
                     boolean created = new File(liveRepoCloneDirectory).mkdirs();
                     if (!created) {
-                        throw new IOException("could not create live directory for model " + repositoryUrl);
+                        throw new IOException("could not create live directory for model " + repositories);
                     }
                 }
                 
+                // Create ilisite.xml, which is not create by ili2c cloning method.
                 String ILI_TOPIC="IliSite09.SiteMetadata";
                 String BID="IliSite09.SiteMetadata";
 
@@ -131,12 +122,16 @@ public class CloneService {
                 ioxWriter.write(new ch.interlis.iox_j.StartBasketEvent(ILI_TOPIC,BID));
 
                 Iom_jObject iomRootObj = new Iom_jObject(ILI_TOPIC+".Site", String.valueOf(1));
-                String repoName = "Mirror of " + repositoryUrl;
-                if (repoName.length() >= 50) repoName = repoName.substring(0, 50);
-                iomRootObj.setattrvalue("Name", repoName);
-
-                // TODO: use shortDescription for listing all clone repos
+                iomRootObj.setattrvalue("Title", userConfig.getIliSite().getTitle());
+                iomRootObj.setattrvalue("Name", userConfig.getIliSite().getName());
                 
+                String shortDescription = String.join("\n", Arrays.asList(repositories.split(",")));
+                iomRootObj.setattrvalue("shortDescription", shortDescription);
+                
+                iomRootObj.setattrvalue("Owner", userConfig.getIliSite().getOwner());        
+                iomRootObj.setattrvalue("technicalContact", userConfig.getIliSite().getTechnicalContact());        
+                iomRootObj.setattrvalue("furtherInformation", userConfig.getIliSite().getFurtherInformation());        
+
                 ioxWriter.write(new ch.interlis.iox_j.ObjectEvent(iomRootObj));   
 
                 ioxWriter.write(new ch.interlis.iox_j.EndBasketEvent());
@@ -144,11 +139,11 @@ public class CloneService {
                 ioxWriter.flush();
                 ioxWriter.close();                
                 
+                // Copy from stage to live directory
                 log.debug("copying from stage to live");
                 FileUtils.copyDirectory(new File(stageRepoCloneDirectory), new File(liveRepoCloneDirectory));
                 
-                // TODO: In ein (Memory)-Object schreiben
-//                repository.setLastsuccessfulrun(now);
+                infoService.setLastSuccessfulRun(now);
             }            
         } catch (IOException e) {
             e.printStackTrace();
@@ -156,13 +151,8 @@ public class CloneService {
         } catch (IoxException e) {
             e.printStackTrace();
             log.error(e.getMessage());
-//        } catch (URISyntaxException e) {
-//            e.printStackTrace();
-//            log.error(e.getMessage());
         } finally {
-            // TODO: In ein (Memory)-Object schreiben
-//            repository.setLastrun(now);
-//            objectContext.commitChanges();
+            infoService.setLastRun(now);
         }
     }
 }

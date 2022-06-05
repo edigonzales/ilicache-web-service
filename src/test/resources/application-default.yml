@@ -1,0 +1,25 @@
+server.servlet.register-default-servlet: true
+
+management:
+  endpoint:
+    health:
+      show-details: always
+
+# aka internal
+app:
+    myVar: ${VAR:defaultValue}  
+    liveRepoCloneDirectoryName: mirror
+    stageRepoCloneDirectoryName: stage
+
+#aka external
+user:
+  iliSite:
+    name: ${ILISITE_NAME:interlis repository mirror}
+    title: ${ILISITE_TITLE:INTERLIS Repository Mirror}
+    owner: ${ILISITE_OWNER:https://www.example.com}
+    technicalContact: ${ILISITE_TECHNICAL_CONTACT:mailto:admin@example.com} 
+    furtherInformation: ${ILISITE_FURTHER_INFORMATION:}
+  cloneDirectory: ${CLONE_DIRECTORY:/Users/stefan/tmp/ilicache/}
+  cloneCronExpression: ${CLONE_CRON_EXPRESSION:0 0/2 * * * ?} 
+  cloneOnStartup: ${CLONE_ON_STARTUP:true}
+  cloneRepositories: ${CLONE_REPOSITORIES:http://models.interlis.ch,https://models.kgk-cgc.ch}

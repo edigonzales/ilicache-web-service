@@ -7,7 +7,14 @@ server.servlet.register-default-servlet: true
 management:
   endpoint:
     health:
+      probes:
+        enabled: true
       show-details: always
+  health:
+      livenessState:
+        enabled: true
+      readinessState:
+        enabled: true  
 
 # aka internal
 app:
@@ -18,15 +25,16 @@ app:
 #aka external
 user:
   iliSite:
-    name: ${ILISITE_NAME:interlis-model-repositories-mirror}
-    title: ${ILISITE_TITLE:INTERLIS model repositories mirror}
-    shortDescription: ${ILISITE_SHORT_DESCRIPTION:A mirror of INTERLIS model repositories}
+    name: ${ILISITE_NAME:interlis repository mirror}
+    title: ${ILISITE_TITLE:INTERLIS Repository Mirror}
+    #shortDescription: ${ILISITE_SHORT_DESCRIPTION:A mirror of INTERLIS model repositories}
     owner: ${ILISITE_OWNER:https://www.example.com}
     technicalContact: ${ILISITE_TECHNICAL_CONTACT:mailto:admin@example.com} 
     furtherInformation: ${ILISITE_FURTHER_INFORMATION:}
   cloneDirectory: ${CLONE_DIRECTORY:/Users/stefan/tmp/ilicache/}
   cloneCronExpression: ${CLONE_CRON_EXPRESSION:0 0/2 * * * ?} #"0 0 2 * * ?"
   cloneOnStartup: ${CLONE_ON_STARTUP:false}
-  cloneRepositories: ${CLONE_REPOSITORIES:http://models.interlis.ch,https://models.kgk-cgc.ch/}
+  cloneRepositories: ${CLONE_REPOSITORIES:http://models.interlis.ch,https://models.kgk-cgc.ch}
+  #cloneRepositories: ${CLONE_REPOSITORIES:http://models.interlis.ch,https://models.kgk-cgc.ch,http://models.geo.admin.ch}
   #peerRepositories: ${PEER_REPOSITORIES:http://models.interlis.ch}
    
