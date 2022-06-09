@@ -18,19 +18,19 @@ import org.springframework.nativex.hint.TypeHint;
 import ch.so.agi.ilicache.config.UserConfig;
 import ch.so.agi.ilicache.service.CloneService;
 
-@TypeHint(types = org.apache.catalina.servlets.DefaultServlet.class, 
-                   access= {TypeAccess.DECLARED_METHODS, 
-                           TypeAccess.DECLARED_FIELDS, 
-                           TypeAccess.DECLARED_CONSTRUCTORS, 
-                           TypeAccess.PUBLIC_METHODS,
-                           TypeAccess.PUBLIC_FIELDS,
-                           TypeAccess.PUBLIC_CONSTRUCTORS,
-                           //TypeAccess.JNI,
-                           TypeAccess.QUERY_DECLARED_CONSTRUCTORS,
-                           TypeAccess.QUERY_DECLARED_METHODS,
-                           TypeAccess.QUERY_PUBLIC_CONSTRUCTORS,
-                           TypeAccess.QUERY_PUBLIC_METHODS}               
-    )
+//@TypeHint(types = org.apache.catalina.servlets.DefaultServlet.class, 
+//                   access= {TypeAccess.DECLARED_METHODS, 
+//                           TypeAccess.DECLARED_FIELDS, 
+//                           TypeAccess.DECLARED_CONSTRUCTORS, 
+//                           TypeAccess.PUBLIC_METHODS,
+//                           TypeAccess.PUBLIC_FIELDS,
+//                           TypeAccess.PUBLIC_CONSTRUCTORS,
+//                           //TypeAccess.JNI,
+//                           TypeAccess.QUERY_DECLARED_CONSTRUCTORS,
+//                           TypeAccess.QUERY_DECLARED_METHODS,
+//                           TypeAccess.QUERY_PUBLIC_CONSTRUCTORS,
+//                           TypeAccess.QUERY_PUBLIC_METHODS}               
+//    )
 @SpringBootApplication
 public class IlicacheWebServiceApplication {    
     @Autowired
