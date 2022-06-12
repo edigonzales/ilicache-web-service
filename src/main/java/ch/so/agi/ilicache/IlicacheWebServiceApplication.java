@@ -32,7 +32,7 @@ import ch.so.agi.ilicache.service.CloneService;
 //                           TypeAccess.QUERY_PUBLIC_METHODS}               
 //    )
 @TypeHint(
-        types = {org.eclipse.jetty.security.ConstraintSecurityHandler.class, org.eclipse.jetty.servlet.DefaultServlet.class, java.lang.Byte.class},
+        types = {org.eclipse.jetty.security.ConstraintSecurityHandler.class, org.eclipse.jetty.servlet.DefaultServlet.class, java.lang.Byte.class, java.lang.Double.class, java.lang.Float.class},
         typeNames = {"org.eclipse.jetty.webapp.ClassMatcher$ByPackageOrName", "org.eclipse.jetty.webapp.ClassMatcher$ByLocationOrModule"}, 
         access= {TypeAccess.DECLARED_METHODS, 
               TypeAccess.DECLARED_FIELDS, 

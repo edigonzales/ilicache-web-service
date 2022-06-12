@@ -35,7 +35,7 @@ user:
     furtherInformation: ${ILISITE_FURTHER_INFORMATION:}
   cloneDirectory: ${CLONE_DIRECTORY:/Users/stefan/tmp/ilicache/}
   cloneCronExpression: ${CLONE_CRON_EXPRESSION:0 0/2 * * * ?} #"0 0 2 * * ?"
-  cloneOnStartup: ${CLONE_ON_STARTUP:true} # nur wegen build mit native
+  cloneOnStartup: ${CLONE_ON_STARTUP:false} # nur wegen build mit native
   cloneRepositories: ${CLONE_REPOSITORIES:http://models.interlis.ch,https://models.kgk-cgc.ch}
   #cloneRepositories: ${CLONE_REPOSITORIES:http://models.interlis.ch,https://models.kgk-cgc.ch,http://models.geo.admin.ch}
   #peerRepositories: ${PEER_REPOSITORIES:http://models.interlis.ch}
