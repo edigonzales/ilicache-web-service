@@ -22,7 +22,6 @@ import org.springframework.stereotype.Component;
 
 import ch.so.agi.ilicache.config.UserConfig;
 
-@SuppressWarnings("unused")
 @Component
 public class MyTomcatWebServerCustomizer implements WebServerFactoryCustomizer<JettyServletWebServerFactory> {
 
@@ -36,19 +35,40 @@ public class MyTomcatWebServerCustomizer implements WebServerFactoryCustomizer<J
                 final WebAppContext webAppContext = (WebAppContext) childHandlersByClass[0];
                 ServletHandler handler = webAppContext.getServletHandler();
                 
-                ServletHolder defServlet = ((WebAppContext)server.getHandlers()[0]).getServletHandler().getServlets()[0];
-                defServlet.setInitParameter("dirAllowed","true");
-                defServlet.setInitParameter("resourceBase","/Users/stefan/tmp/");
-                webAppContext.getServletHandler().addServletWithMapping(defServlet, "/foo");
-                webAppContext.getServletHandler().getServletMapping("/foo").setDefault(true);
+//                ServletHolder defServlet = ((WebAppContext)server.getHandlers()[0]).getServletHandler().getServlets()[0];
+//                defServlet.setInitParameter("dirAllowed","true");
+//                defServlet.setInitParameter("resourceBase","/Users/stefan/tmp/");
+//                webAppContext.getServletHandler().addServletWithMapping(defServlet, "/foo");
+//                webAppContext.getServletHandler().getServletMapping("/foo").setDefault(true);
         
-                ServletHolder holder = new ServletHolder();
-                holder.setName("default");
-                holder.setClassName("org.eclipse.jetty.servlet.DefaultServlet");
-                holder.setInitParameter("dirAllowed", "true");
-                holder.setInitOrder(1);
-                webAppContext.getServletHandler().addServletWithMapping(holder, "/aa/*");
-                webAppContext.getServletHandler().getServletMapping("/aa/*").setDefault(true);
+//                ServletHolder holder = new ServletHolder();
+//                holder.setName("default");
+//                holder.setClassName("org.eclipse.jetty.servlet.DefaultServlet");
+//                holder.setInitParameter("dirAllowed", "true");
+//                holder.setInitOrder(1);
+//                webAppContext.addServlet(holder, "/foo/*");
+               
+                System.setProperty("org.eclipse.jetty.LEVEL","DEBUG");
+
+                ServletContextHandler context = new ServletContextHandler(ServletContextHandler.SESSIONS);
+
+                String homePath = System.getProperty("user.home");
+
+                ServletHolder holderHome = new ServletHolder("static-home", DefaultServlet.class);
+                holderHome.setInitParameter("resourceBase",homePath);
+                holderHome.setInitParameter("dirAllowed","true");
+                holderHome.setInitParameter("pathInfoOnly","true");
+                context.addServlet(holderHome,"/home/*");
+
+                
+                
+                ServletHolder holderPwd = new ServletHolder("default", DefaultServlet.class);
+                holderPwd.setInitParameter("dirAllowed","true");
+                holderPwd.setInitParameter("resourceBase","/Users/stefan/tmp/");
+                context.addServlet(holderPwd, "/foo/*");
+
+//                webAppContext.getServletHandler().addServletWithMapping(holder, "/aa/*");
+//                webAppContext.getServletHandler().getServletMapping("/aa/*").setDefault(true);
             }
             
         };  
