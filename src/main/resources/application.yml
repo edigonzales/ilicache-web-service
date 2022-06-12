@@ -1,7 +1,6 @@
 #logging.level.root: ${ROOT_LOGLEVEL:INFO}
 
-logging.level.root: DEBUG
-
+logging.level.root: INFO
 
 # https://github.com/spring-projects/spring-boot/wiki/Spring-Boot-2.4-Release-Notes#default-servlet-registration
 # https://stackoverflow.com/questions/64822250/illegalstateexception-after-upgrading-web-app-to-spring-boot-2-4
@@ -36,7 +35,7 @@ user:
     furtherInformation: ${ILISITE_FURTHER_INFORMATION:}
   cloneDirectory: ${CLONE_DIRECTORY:/Users/stefan/tmp/ilicache/}
   cloneCronExpression: ${CLONE_CRON_EXPRESSION:0 0/2 * * * ?} #"0 0 2 * * ?"
-  cloneOnStartup: ${CLONE_ON_STARTUP:false}
+  cloneOnStartup: ${CLONE_ON_STARTUP:true} # nur wegen build mit native
   cloneRepositories: ${CLONE_REPOSITORIES:http://models.interlis.ch,https://models.kgk-cgc.ch}
   #cloneRepositories: ${CLONE_REPOSITORIES:http://models.interlis.ch,https://models.kgk-cgc.ch,http://models.geo.admin.ch}
   #peerRepositories: ${PEER_REPOSITORIES:http://models.interlis.ch}

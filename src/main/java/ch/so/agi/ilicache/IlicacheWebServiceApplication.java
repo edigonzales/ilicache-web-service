@@ -31,6 +31,21 @@ import ch.so.agi.ilicache.service.CloneService;
 //                           TypeAccess.QUERY_PUBLIC_CONSTRUCTORS,
 //                           TypeAccess.QUERY_PUBLIC_METHODS}               
 //    )
+@TypeHint(
+        types = {org.eclipse.jetty.security.ConstraintSecurityHandler.class, org.eclipse.jetty.servlet.DefaultServlet.class, java.lang.Byte.class},
+        typeNames = {"org.eclipse.jetty.webapp.ClassMatcher$ByPackageOrName", "org.eclipse.jetty.webapp.ClassMatcher$ByLocationOrModule"}, 
+        access= {TypeAccess.DECLARED_METHODS, 
+              TypeAccess.DECLARED_FIELDS, 
+              TypeAccess.DECLARED_CONSTRUCTORS, 
+              TypeAccess.PUBLIC_METHODS,
+              TypeAccess.PUBLIC_FIELDS,
+              TypeAccess.PUBLIC_CONSTRUCTORS,
+              //TypeAccess.JNI,
+              TypeAccess.QUERY_DECLARED_CONSTRUCTORS,
+              TypeAccess.QUERY_DECLARED_METHODS,
+              TypeAccess.QUERY_PUBLIC_CONSTRUCTORS,
+              TypeAccess.QUERY_PUBLIC_METHODS}               
+)
 @SpringBootApplication
 public class IlicacheWebServiceApplication {    
     @Autowired

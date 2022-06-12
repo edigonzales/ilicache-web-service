@@ -25,3 +25,7 @@ fixme ./gradlew aotTest generateAot nativeCompile
 ```
 java -jar target/ilicache-web-service-0.0.1-SNAPSHOT.jar --spring.config.location=classpath:/application.yml,optional:file:/path/to/config.yml
 ```
+
+./gradlew bootJar
+java -DspringAot=true -agentlib:native-image-agent=config-output-dir=src/main/resources/META-INF/native-image -jar build/libs/ilicache-web-service-0.0.LOCALBUILD.jar
+./gradlew nativeCompile

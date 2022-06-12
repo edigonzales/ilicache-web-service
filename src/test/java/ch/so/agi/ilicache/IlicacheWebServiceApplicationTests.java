@@ -32,6 +32,12 @@ class IlicacheWebServiceApplicationTests {
         assertThat(this.restTemplate.getForObject("http://localhost:" + port + "/mirror/ilisite.xml", String.class))
                 .contains("DATASECTION");
     }
+    
+    @Test
+    public void info_Ok() throws Exception {
+        assertThat(this.restTemplate.getForObject("http://localhost:" + port + "/info", String.class))
+                .contains("repositories");
+    }
 
 
 }
