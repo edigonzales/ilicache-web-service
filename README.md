@@ -14,18 +14,26 @@
 - Docker
 
 ## Build
+FIXME (aotTest?)
+
 ```
-fixme ./gradlew aotTest generateAot nativeCompile
+./gradlew nativeCompile -i
 ```
 
 ## Run
 
 ### JVM
 
+FIXME
+
 ```
 java -jar target/ilicache-web-service-0.0.1-SNAPSHOT.jar --spring.config.location=classpath:/application.yml,optional:file:/path/to/config.yml
 ```
 
-./gradlew bootJar
-java -DspringAot=true -agentlib:native-image-agent=config-output-dir=src/main/resources/META-INF/native-image -jar build/libs/ilicache-web-service-0.0.LOCALBUILD.jar
-./gradlew nativeCompile
+## XSLT
+
+### Develop
+
+```
+java -jar /Users/stefan/apps/SaxonHE10-6J/saxon-he-10.6.jar -s:ilimodels_mirror.xml -xsl:/Users/stefan/sources/ilicache-web-service/src/main/resources/ilimodels2html.xsl -o:out.html
+```
