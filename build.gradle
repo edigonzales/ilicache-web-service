@@ -22,23 +22,15 @@ repositories {
     maven { url 'https://repo.spring.io/release' }
 }
 
-ext['jetty.version'] = '10.0.9'
 
 dependencies {
-    implementation ('org.springframework.boot:spring-boot-starter-web') {
-        exclude group: 'org.springframework.boot', module: 'spring-boot-starter-tomcat'
-    }
-    implementation ('org.springframework.boot:spring-boot-starter-jetty') {
-        exclude group: 'org.eclipse.jetty.websocket', module: 'websocket-server'
-        exclude group: 'org.eclipse.jetty.websocket', module: 'javax-websocket-server-impl'
-        
-    }
+    implementation 'org.springframework.boot:spring-boot-starter-web'
     implementation 'org.springframework.boot:spring-boot-starter-actuator'
     developmentOnly 'org.springframework.boot:spring-boot-devtools'
       
-    implementation 'ch.interlis:iox-ili:1.21.7' 
-    implementation 'ch.interlis:ili2c-core:5.2.3'
-    implementation 'ch.interlis:ili2c-tool:5.2.3'
+    implementation 'ch.interlis:iox-ili:1.21.10' 
+    implementation 'ch.interlis:ili2c-core:5.2.6'
+    implementation 'ch.interlis:ili2c-tool:5.2.6'
 
     implementation 'commons-io:commons-io:2.11.0'
 
@@ -60,7 +52,7 @@ import org.springframework.aot.gradle.dsl.AotMode
 springAot {
     //mode = AotMode.NATIVE_AGENT
     debugVerify = false
-    removeXmlSupport = true
+    removeXmlSupport = false
     removeSpelSupport = false
     removeYamlSupport = false
     removeJmxSupport = true

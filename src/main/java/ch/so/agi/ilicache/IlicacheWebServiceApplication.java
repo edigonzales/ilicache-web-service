@@ -18,34 +18,6 @@ import org.springframework.nativex.hint.TypeHint;
 import ch.so.agi.ilicache.config.UserConfig;
 import ch.so.agi.ilicache.service.CloneService;
 
-//@TypeHint(types = org.apache.catalina.servlets.DefaultServlet.class, 
-//                   access= {TypeAccess.DECLARED_METHODS, 
-//                           TypeAccess.DECLARED_FIELDS, 
-//                           TypeAccess.DECLARED_CONSTRUCTORS, 
-//                           TypeAccess.PUBLIC_METHODS,
-//                           TypeAccess.PUBLIC_FIELDS,
-//                           TypeAccess.PUBLIC_CONSTRUCTORS,
-//                           //TypeAccess.JNI,
-//                           TypeAccess.QUERY_DECLARED_CONSTRUCTORS,
-//                           TypeAccess.QUERY_DECLARED_METHODS,
-//                           TypeAccess.QUERY_PUBLIC_CONSTRUCTORS,
-//                           TypeAccess.QUERY_PUBLIC_METHODS}               
-//    )
-@TypeHint(
-        types = {org.eclipse.jetty.security.ConstraintSecurityHandler.class, org.eclipse.jetty.servlet.DefaultServlet.class, java.lang.Byte.class, java.lang.Double.class, java.lang.Float.class},
-        typeNames = {"org.eclipse.jetty.webapp.ClassMatcher$ByPackageOrName", "org.eclipse.jetty.webapp.ClassMatcher$ByLocationOrModule"}, 
-        access= {TypeAccess.DECLARED_METHODS, 
-              TypeAccess.DECLARED_FIELDS, 
-              TypeAccess.DECLARED_CONSTRUCTORS, 
-              TypeAccess.PUBLIC_METHODS,
-              TypeAccess.PUBLIC_FIELDS,
-              TypeAccess.PUBLIC_CONSTRUCTORS,
-              //TypeAccess.JNI,
-              TypeAccess.QUERY_DECLARED_CONSTRUCTORS,
-              TypeAccess.QUERY_DECLARED_METHODS,
-              TypeAccess.QUERY_PUBLIC_CONSTRUCTORS,
-              TypeAccess.QUERY_PUBLIC_METHODS}               
-)
 @SpringBootApplication
 public class IlicacheWebServiceApplication {    
     @Autowired
@@ -58,7 +30,7 @@ public class IlicacheWebServiceApplication {
 		SpringApplication.run(IlicacheWebServiceApplication.class, args);
 	}
 	
-	// PostConstruct: Anwendung nicht "live live", d.h. nicht fertig hochgefahren und nicht erreichbar.
+	// PostConstruct: Anwendung weder live noch ready, d.h. nicht fertig hochgefahren und nicht erreichbar.
 	// CommandLineRunner: Anwendung live aber nicht ready.
     @Bean
     public CommandLineRunner init() {

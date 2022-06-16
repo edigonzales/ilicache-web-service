@@ -4,7 +4,8 @@ logging.level.root: INFO
 
 # https://github.com/spring-projects/spring-boot/wiki/Spring-Boot-2.4-Release-Notes#default-servlet-registration
 # https://stackoverflow.com/questions/64822250/illegalstateexception-after-upgrading-web-app-to-spring-boot-2-4
-server.servlet.register-default-servlet: true
+# Erst wieder wenn Directory Listing verwendet wird.
+#server.servlet.register-default-servlet: true
 
 management:
   endpoint:
