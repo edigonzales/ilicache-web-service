@@ -47,6 +47,12 @@
                 font-weight: 900;
             }
 
+            .info {
+                margin-top: 30px;
+                margin-bottom: 30px;
+                font-style: italic;
+            }
+
         /*
             .level1 {
                 font-weight: 700;
@@ -181,11 +187,12 @@
             <div id="container">
                 <div class="logo">
                     <div>
-                        <img src="logo/Logo.png" alt="Organisationslogo" style="max-width: 100%; min-width:200px;"/>
+                        <img src="logo/Logo.png" alt="Logo of organisation" style="max-width: 100%; min-width:200px;"/>
                     </div>
                 </div>
 
-                <div id="title">INTERLIS-Modellablagen</div>
+                <div id="title">INTERLIS-Repositories</div>
+                <div class="info">Last time cloned: </div>
 
                 <xsl:apply-templates select="ili:TRANSFER/ili:DATASECTION/ili:IliRepository20.RepositoryIndex" />
 
