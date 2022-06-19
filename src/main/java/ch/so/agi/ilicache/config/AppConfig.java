@@ -31,5 +31,8 @@ public class AppConfig implements WebMvcConfigurer {
         // Es ist wohl sinnvoll dem Repo einen Kontext zu geben, also z.B. "repo". Sonst gibt es
         // ein Durcheinander mit vielem anderem.
         registry.addResourceHandler("/repo/**").addResourceLocations("file:"+mirrorResourceLocation + File.separator).setCachePeriod(3000);
+        
+        // TODO copy default logo (must happen in dockerfile)
+        registry.addResourceHandler("/logo/**").addResourceLocations("file:/opt/logo/").setCachePeriod(3000);
     }    
 }

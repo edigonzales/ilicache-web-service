@@ -10,7 +10,44 @@
         <meta name="viewport" content="width=device-width, initial-scale=1" />
         <meta http-equiv="cache-control" content="no-cache"/>
 
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=JetBrains+Mono&amp;family=Roboto:ital,wght@0,400;0,700;0,900;1,400&amp;display=swap"/>
+        <link type="text/css" rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons"/>
+
         <style>
+            html {
+                font-family: 'Roboto', sans-serif;
+                font-size: 16px;
+                color: #333333;
+            }
+
+            body {
+                margin: 0px;
+                padding: 0px;
+                background: #FFFFFF; 
+            }
+
+            #container {
+                margin-left: auto;
+                margin-right: auto;
+                width: 1200px;
+                max-width: 95%;
+                background-color: #FFFFFF;        
+            }
+
+            .logo {
+                margin-top: 20px;
+                text-align: right;
+                min-width: 50px;
+            }
+
+            #title {
+                margin-top: 60px;
+                margin-bottom: 30px;
+                font-size: 40px;
+                font-weight: 900;
+            }
+
+        /*
             .level1 {
                 font-weight: 700;
                 background-color: yellow;
@@ -30,43 +67,198 @@
                 background-color: green;
                 padding-left: 100px;
             }
+          */  
+            details {
+                background-color: white;
+                margin-top: 5px;
+                margin-bottom: 15px;
+            }
 
+            details > details {
+                background-color: white;
+                padding-left: 20px;
+                margin-bottom: 5px;
+            }
+
+            details > details > details {
+                background-color: white;
+                padding-left: 20px;
+            }
+
+            details > details > details > details {
+                background-color: white;
+                padding-left: 20px;
+            }
+
+            p {
+                margin-block-end: 0px;
+                margin-block-start: 0px;
+            }
+
+            summary a * {
+                pointer-events: none;
+            }
+
+            table {
+                border-collapse: collapse;
+                border-spacing: 0;
+                width: 100%;
+                border: 0px solid #ddd;
+                background-color: rgba(237, 237, 237, 0.3);
+            }
+            
+            th, td {
+                text-align: left;
+                padding: 8px;
+            } 
+
+            a.default-link {
+                overflow: hidden;
+                text-overflow: ellipsis;
+                color: #c62828; 
+                text-decoration: none !important;
+            }
+
+            a.default-link:hover {
+                color: #c62828;
+                text-decoration: underline !important;
+            }  
+
+            a.default-link:visited {
+                color: #c62828; 
+                text-decoration: underline !important;
+            }  
+
+            a.black-link {
+                overflow: hidden;
+                text-overflow: ellipsis;
+                color: #333333; 
+                text-decoration: none !important;
+            }
+
+            a.black-link:hover {
+                color: #333333;
+                text-decoration: underline !important;
+            }  
+
+            a.black-link:visited {
+                color: #333333; 
+                text-decoration: underline !important;
+            }  
+
+            a.icon-link {
+                overflow: hidden;
+                text-overflow: ellipsis;
+                color: #333333; 
+                text-decoration: none !important;
+            }
+
+            a.icon-link:hover {
+                color: #333333;
+                text-decoration: none !important;
+            }  
+
+            a.icon-link:visited {
+                color: #333333; 
+                text-decoration: none !important;
+            }  
+
+            hr {
+                border: none;
+                height: 1px;
+                background-color: #eee; 
+            }
+
+            .material-icons.md-18 { font-size: 18px; }
+            .material-icons.md-24 { font-size: 24px; } /* Default */
+            .material-icons.md-36 { font-size: 36px; }
+            .material-icons.md-48 { font-size: 48px; }
 
         </style>
 
         </head>
         <body>
+            <div id="container">
+                <div class="logo">
+                    <div>
+                        <img src="logo/Logo.png" alt="Organisationslogo" style="max-width: 100%; min-width:200px;"/>
+                    </div>
+                </div>
 
-            <xsl:apply-templates select="ili:TRANSFER/ili:DATASECTION/ili:IliRepository20.RepositoryIndex" />
+                <div id="title">INTERLIS-Modellablagen</div>
 
+                <xsl:apply-templates select="ili:TRANSFER/ili:DATASECTION/ili:IliRepository20.RepositoryIndex" />
+
+            </div>
         </body>
         </html>
     </xsl:template>
 
     <xsl:template match="ili:IliRepository20.RepositoryIndex">  
         <xsl:for-each-group select="ili:IliRepository20.RepositoryIndex.ModelMetadata" group-by="tokenize(ili:File, '/')[1]">
-            <xsl:sort order="ascending" select="tokenize(ili:File, '/')[1]"/>
+            <xsl:sort order="ascending" select="current-grouping-key()"/>
                 <details class="level1">
                     <summary>
-                        <xsl:value-of select="tokenize(ili:File, '/')[1]"/>
+                        <span>
+                            <xsl:value-of select="current-grouping-key()"/>
+                        </span>
+                        <xsl:text>&#160;</xsl:text>
+                        <span>
+                            <i>
+                                <xsl:attribute name="class">material-icons</xsl:attribute>
+                                <xsl:attribute name="style">vertical-align: -5px;</xsl:attribute>
+                                <xsl:element name="a">
+                                    <xsl:attribute name="class">
+                                        <xsl:text>icon-link</xsl:text>
+                                    </xsl:attribute>
+                                    <xsl:attribute name="href">
+                                        <xsl:text>https://</xsl:text><xsl:value-of select="current-grouping-key()"/>
+                                    </xsl:attribute>
+                                    <xsl:attribute name="target">
+                                        <xsl:text>_blank</xsl:text>
+                                    </xsl:attribute>
+                                    launch
+                                </xsl:element>
+                            </i>
+                        </span>
                     </summary>
                     <p>
                         <xsl:for-each-group select="current-group()" group-by="tokenize(ili:File, '/')[2]">
-                            <xsl:sort order="ascending" select="tokenize(ili:File, '/')[2]"/>
+                            <xsl:sort order="ascending" select="current-grouping-key()"/>
                             <details class="level2">
                                 <summary>
-                                    <xsl:value-of select="tokenize(ili:File, '/')[2]"/>
+                                    <xsl:value-of select="current-grouping-key()"/>
                                 </summary>
                                 <p>
-                                    <!--Unterscheidung ILI vs Ordner hier?-->
                                     <xsl:for-each-group select="current-group()" group-by="tokenize(ili:File, '/')[3]">
-                                        <xsl:sort order="ascending" select="tokenize(ili:File, '/')[3]"/>
+                                        <xsl:sort order="ascending" select="current-grouping-key()"/>
                                         <details class="level3">
-                                            <summary>
-                                                <xsl:value-of select="tokenize(ili:File, '/')[3]"/>
-                                            </summary>
+                                            <xsl:choose>
+                                                <xsl:when test="ends-with(current-grouping-key(),'.ili')">
+                                                    <summary>
+                                                        <xsl:value-of select="ili:Name"/>
+                                                    </summary>
+                                                    <!-- p in when/otherwise, da auch unterschiedlich-->
+                                                </xsl:when>
+                                                <xsl:otherwise>
+                                                    <summary>
+                                                        <xsl:value-of select="current-grouping-key()"/>
+                                                    </summary>
+                                                </xsl:otherwise>
+                                            </xsl:choose>
                                             <p>
                                                 <!--Unterscheidung ILI vs Ordner hier?-->
+                                                <xsl:for-each-group select="current-group()" group-by="tokenize(ili:File, '/')[4]">
+                                                    <xsl:sort order="ascending" select="current-grouping-key()"/>
+                                                    <details class="level4">
+                                                        <summary>
+                                                            <xsl:value-of select="current-grouping-key()"/>
+                                                        </summary>
+                                                        <p>
+                                                            <!--Unterscheidung ILI vs Ordner hier?-->
+                                                        </p>
+                                                    </details>
+                                                </xsl:for-each-group>
                                             </p>
                                         </details>
                                     </xsl:for-each-group>

@@ -12,6 +12,7 @@
 - Tests
 - Pipeline
 - Docker
+- Defaultlogo in Dockerfile kopieren
 
 ## Build
 FIXME (aotTest?)
