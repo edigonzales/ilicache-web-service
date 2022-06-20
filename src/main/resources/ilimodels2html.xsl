@@ -4,7 +4,7 @@
     <xsl:template match="/">
         <html>
         <head>
-        <title>foo • bar</title>
+        <title>INTERLIS Repository Mirror</title>
         <meta name="description" content="INTERLIS Repository Mirror"/>
         <meta name="author" content="Stefan Ziegler" />
         <meta name="viewport" content="width=device-width, initial-scale=1" />
@@ -202,6 +202,8 @@
     </xsl:template>
 
     <xsl:template match="ili:IliRepository20.RepositoryIndex">  
+
+    <!--fn:subsequent????-->
         <xsl:for-each-group select="ili:IliRepository20.RepositoryIndex.ModelMetadata" group-by="tokenize(ili:File, '/')[1]">
             <xsl:sort order="ascending" select="current-grouping-key()"/>
                 <details class="level1">

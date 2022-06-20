@@ -29,20 +29,20 @@ public class IlicacheWebServiceApplication {
 	public static void main(String[] args) {
 		SpringApplication.run(IlicacheWebServiceApplication.class, args);
 	}
-	
-	// PostConstruct: Anwendung weder live noch ready, d.h. nicht fertig hochgefahren und nicht erreichbar.
-	// CommandLineRunner: Anwendung live aber nicht ready.
+
+    // PostConstruct: Anwendung weder live noch ready, d.h. nicht fertig hochgefahren und nicht erreichbar.
+    // CommandLineRunner: Anwendung live aber nicht ready.
     @Bean
-    public CommandLineRunner init() {
-        return args -> {                        
+    CommandLineRunner init() {
+        return args -> {
             if (userConfig.isCloneOnStartup()) {
                 cloneService.cloneRepositories();
-            } 
-            
+            }
+
             String LISTING_XSL = "listing.xsl";
             File listingXslFile = Paths.get(userConfig.getCloneDirectory(), LISTING_XSL).toFile();
             InputStream listingXslResource = new ClassPathResource(LISTING_XSL).getInputStream();
-            Files.copy(listingXslResource, listingXslFile.toPath(), StandardCopyOption.REPLACE_EXISTING);            
+            Files.copy(listingXslResource, listingXslFile.toPath(), StandardCopyOption.REPLACE_EXISTING);
         };
     }
 }
