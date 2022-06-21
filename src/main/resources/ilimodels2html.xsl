@@ -236,7 +236,8 @@
                             <xsl:sort order="ascending" select="current-grouping-key()"/>
                             <details class="level2">
                                 <summary>
-                                    <xsl:value-of select="current-grouping-key()"/>
+                                <!--if else... auch hier-->
+                                    <xsl:value-of select="current-grouping-key()"/><xsl:text>/</xsl:text>
                                 </summary>
                                 <p>
                                     <xsl:for-each-group select="current-group()" group-by="tokenize(ili:File, '/')[3]">
