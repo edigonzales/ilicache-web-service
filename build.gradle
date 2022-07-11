@@ -1,7 +1,7 @@
 plugins {
     id 'org.springframework.boot' version '2.7.0'
     id 'io.spring.dependency-management' version '1.0.11.RELEASE'
-    id 'org.springframework.experimental.aot' version '0.12.0'
+    //id 'org.springframework.experimental.aot' version '0.12.0'
     id 'java'
 }
 
@@ -12,27 +12,30 @@ group = 'ch.so.agi'
 sourceCompatibility = 11
 targetCompatibility = 11
 
+/*
 compileJava {
     options.compilerArgs.addAll(['--release', '11'])
 }
-
+*/
 repositories {
     maven { url "https://jars.interlis.ch" }
     mavenCentral()
     maven { url 'https://repo.spring.io/release' }
 }
 
-ext['jetty.version'] = '10.0.9'
+//ext['jetty.version'] = '10.0.9'
 
 dependencies {
     implementation ('org.springframework.boot:spring-boot-starter-web') {
-        exclude group: 'org.springframework.boot', module: 'spring-boot-starter-tomcat'
+        //exclude group: 'org.springframework.boot', module: 'spring-boot-starter-tomcat'
     }
+    /*
     implementation ('org.springframework.boot:spring-boot-starter-jetty') {
         exclude group: 'org.eclipse.jetty.websocket', module: 'websocket-server'
         exclude group: 'org.eclipse.jetty.websocket', module: 'javax-websocket-server-impl'
         
     }
+    */
     implementation 'org.springframework.boot:spring-boot-starter-actuator'
     developmentOnly 'org.springframework.boot:spring-boot-devtools'
       
@@ -50,6 +53,7 @@ test {
     useJUnitPlatform()
 }
 
+/*
 bootBuildImage {
     builder = 'paketobuildpacks/builder:tiny'
     //environment = ['BP_NATIVE_IMAGE': 'true']
@@ -71,3 +75,4 @@ nativeBuild {
     verbose = true
     fallback = false
 }
+*/

@@ -50,6 +50,8 @@ public class MainController {
         infoMap.put("repositories", userConfig.getCloneRepositories().split(","));
         infoMap.put("cloneStatus", infoService);
         
+        System.out.println("fuba2222r");
+        
         return ResponseEntity.ok().body(infoMap);
     } 
 }
